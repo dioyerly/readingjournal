@@ -1111,8 +1111,8 @@ function loadReader(){
   if(window.MBR)return Promise.resolve();
   if(rdLoading)return rdLoading;
   rdLoading=new Promise((ok,ko)=>{
-    const l=document.createElement('link');l.rel='stylesheet';l.href='reader/reader.css?v=20261124f';document.head.appendChild(l);
-    const sc=document.createElement('script');sc.src='reader/reader.js?v=20261124f';sc.onload=ok;sc.onerror=()=>{rdLoading=null;ko()};document.head.appendChild(sc)});
+    const l=document.createElement('link');l.rel='stylesheet';l.href='reader/reader.css?v=20261124g';document.head.appendChild(l);
+    const sc=document.createElement('script');sc.src='reader/reader.js?v=20261124g';sc.onload=ok;sc.onerror=()=>{rdLoading=null;ko()};document.head.appendChild(sc)});
   return rdLoading;
 }
 function vRead(){
@@ -1333,7 +1333,8 @@ function spineDims(b,desk){const h=hash(b.title),m=!desk&&innerWidth<=760,w=Math
 const IMG_CFG={
  lila:{img:'img/lila.webp',base:[453,576,697,819],x:400,w:738,h:118,
   chand:[[655,95],[680,66],[710,70],[740,58],[795,60],[825,68],[856,60],[880,82]],sconce:[[172,72],[1372,72],[95,512],[1415,512]],
-  fire:[55,785],moon:[1172,152],petals:true},
+  fire:[55,785],moon:[1172,152],petals:true,
+  m:{img:'img/lila-m.webp',pm:[1024,1536],sc:1.2,x:163,w:695,h:142,base:[710,870,1032,1204],chand:[],sconce:[],fire:[-999,-999],moon:[-999,-999]}},
  clasica:{img:'img/clasica.webp',base:[441,569,694,826],x:330,w:878,h:124,
   chand:[[662,86],[690,62],[716,52],[740,48],[796,48],[826,52],[852,62],[878,86]],sconce:[[135,118],[1405,118],[80,412],[1452,412]],
   fire:[1512,730],moon:[1090,142],petals:false}};
@@ -1352,7 +1353,7 @@ function mfx(C,mg,R,pt){
   return `<div class="lsfx">${f}</div>`;
 }
 function drawImgShelves(box){
-  const mob=innerWidth<=760,SC=1.8,C=IMG_CFG[theme()],lom=lib.mode==='lomos',list=filteredBooks(),W=mob?Math.round(C.w/SC):C.w,items=[];let last=null;
+  const mob=innerWidth<=760,C0=IMG_CFG[theme()],C=mob&&C0.m?Object.assign({},C0,C0.m):C0,SC=mob?(C0.m?C0.m.sc:1.8):1.8,lom=lib.mode==='lomos',list=filteredBooks(),W=mob?Math.round(C.w/SC):C.w,items=[];let last=null;
   const ch=C.h-8,cw=Math.round(ch*118/176);
   list.forEach(b=>{if(alpha()){const L=letterOf(b);if(L!==last){items.push({div:L,w:40});last=L}}
     const d=spineDims(b,true);items.push(lom?{b,w:Math.max(20,Math.round(d.w*.68)),h:Math.min(C.h-8,Math.round(d.h*.58))}:{b,w:cw+16,cw,ch})});
@@ -1371,11 +1372,12 @@ function drawImgShelves(box){
   C.sconce.forEach(([x,y],i)=>{fx+=pt(x,y,'cfl',`width:7px;height:16px;margin:-14px 0 0 -3.5px;--d:${(1.2+(i%3)*.25).toFixed(2)}s;animation-delay:-${(i*.4).toFixed(1)}s`)});
   fx+=pt(C.fire[0],C.fire[1],'fire')+pt(C.moon[0],C.moon[1],'mglow');
   let mg=null;
-  if(mob){const bw=box.clientWidth||innerWidth-24,mx=60,x0=C.x-mx,rw=C.w+mx*2,y0=C.base[0]-C.h-50,y1=C.base[3]+112,kx=bw/rw,ky=kx*SC;mg={x0,y0,kx,ky,h:Math.round((y1-y0)*ky),W:bw}}
+  if(mob&&C.pm){const bw=box.clientWidth||innerWidth-24,kx=bw/C.pm[0],ky=kx*SC;mg={x0:0,y0:0,kx,ky,h:Math.round(C.pm[1]*ky),W:bw}}
+  else if(mob){const bw=box.clientWidth||innerWidth-24,mx=60,x0=C.x-mx,rw=C.w+mx*2,y0=C.base[0]-C.h-50,y1=C.base[3]+112,kx=bw/rw,ky=kx*SC;mg={x0,y0,kx,ky,h:Math.round((y1-y0)*ky),W:bw}}
   const rowsHtml=pr.map((r,ri)=>`<div class="irow${mob?' m':''}" style="${mob?`left:${Math.round((C.x-mg.x0)*mg.kx)}px;top:${Math.round((C.base[ri]-C.h+1-mg.y0)*mg.ky)}px;width:${W}px;height:${C.h}px;transform:scale(${mg.ky});transform-origin:0 0`:`left:${C.x}px;width:${W}px;height:${C.h}px;top:${C.base[ri]-C.h+1}px`}">${r.map(it=>it.div?`<div class="divi" id="L-${it.div}" style="--dh:${C.h-14}px"><b>${it.div}</b></div>`
     :it.add?(lom?`<div class="sp add" data-act="new" style="--w:32px;--h:${C.h-18}px" title="Agregar libro">+</div>`:`<div class="cv" data-act="new" style="--W:${cw}px"><div class="cvadd" style="width:${cw}px;height:${ch}px;border-radius:4px">+</div></div>`):itemHtml(it)).join('')}</div>`).join('');
   const pager=pages>1?`<div class="pager"><button data-act="pg" data-d="-1" ${lib.page<=0?'disabled':''} title="Anterior">‹</button><span>${lib.page+1} / ${pages}</span><button data-act="pg" data-d="1" ${lib.page>=pages-1?'disabled':''} title="Siguiente">›</button></div>`:'';
-  if(mob)box.innerHTML=`<div class="lsc" style="height:${mg.h}px"><div class="lbg" style="background:url(${C.img}) ${Math.round(-mg.x0*mg.kx)}px ${Math.round(-mg.y0*mg.ky)}px/${Math.round(1536*mg.kx)}px ${Math.round(1024*mg.ky)}px no-repeat"></div>${rowsHtml}${mfx(C,mg,R,pt)}${pager}</div>`;
+  if(mob)box.innerHTML=`<div class="lsc" style="height:${mg.h}px"><div class="lbg" style="background:url(${C.img}) ${Math.round(-mg.x0*mg.kx)}px ${Math.round(-mg.y0*mg.ky)}px/${Math.round((C.pm?C.pm[0]:1536)*mg.kx)}px ${Math.round((C.pm?C.pm[1]:1024)*mg.ky)}px no-repeat"></div>${rowsHtml}${mfx(C,mg,R,pt)}${pager}</div>`;
   else{box.innerHTML=`<div class="lsc"><div class="lsi" style="background-image:url(${C.img})">${rowsHtml}<div class="lsfx">${fx}</div></div>${pager}</div>`;fitImg(box)}
   if(!list.length&&(lib.q||lib.filter!=='Todos'||lib.trope||lib.spice!==''))box.insertAdjacentHTML('afterbegin',`<div style="position:absolute;z-index:6;left:24px;top:24px;padding:10px 16px;border-radius:10px;background:rgba(40,16,60,.8);color:#f3e6f7;font-size:14px">No hay libros con esos filtros.</div>`);
 }
