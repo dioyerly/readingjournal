@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Bookwat · Reading Journal — tu mundo lector encantado</title>
-<meta name="description" content="Bookwat: tu biblioteca encantada, tu lector de EPUB y PDF, tu ADN lector y tu próxima lectura ideal. Probala 1 mes gratis.">
+<title>Bookwat · Reading Journal — tu diario de lectura</title>
+<meta name="description" content="Bookwat: organizá tu biblioteca, leé tus EPUB y PDF con subrayados, conocé tu perfil de lectora y descubrí qué leer después. Probala 1 mes gratis.">
 <meta name="theme-color" content="#1d1030">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -281,6 +281,31 @@ footer nav{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-bo
 #lb img{max-width:100%;max-height:100%;border-radius:10px;box-shadow:0 30px 80px rgba(0,0,0,.6)}
 
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}.hero{height:auto}.stage{position:relative;height:auto;padding-top:110px}.cover{display:none}}
+
+/* ===== v2: tono sobrio ===== */
+.hero2{position:relative;padding:130px clamp(18px,5vw,60px) 40px;text-align:center}
+.h2in{max-width:820px;margin:0 auto}
+.hero2 .kicker{letter-spacing:.26em;margin-bottom:18px}
+.hero2 .htitle{font-size:clamp(38px,6vw,76px);line-height:1.02}
+.hero2 .hsub{max-width:640px;margin:22px auto 0;font:400 clamp(16px,1.7vw,19px)/1.6 var(--sans);color:var(--lilac2);font-style:normal}
+.hcta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:30px}
+.hnote{margin-top:18px;font:500 12.5px var(--sans);color:rgba(231,214,250,.65);letter-spacing:.02em}
+.h2dev{margin-top:54px}
+.demowrap{display:flex;justify-content:center;margin-top:26px}
+.demoframe{background:#0d0618;box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 0 1px rgba(201,167,236,.25);transition:width .4s,height .4s,border-radius .4s;overflow:hidden;position:relative;max-width:100%}
+.demoframe iframe{width:100%;height:100%;border:0;display:block;background:#f5eefb}
+.demoframe[data-d=m]{width:392px;height:800px;border-radius:40px;border:9px solid #0d0618;box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 0 2px rgba(201,167,236,.35)}
+.demoframe[data-d=d]{width:min(100%,1180px);height:min(720px,82vh);border-radius:14px}
+@media(max-width:520px){.demoframe[data-d=m]{width:100%;height:78vh;border-radius:26px;border-width:6px}}
+.hcta .ghost{margin:0;padding:17px 30px;border:1px solid rgba(201,167,236,.5);border-radius:99px;text-decoration:none;font-size:16px;color:var(--lilac2)}
+.hcta .ghost:hover{background:rgba(201,167,236,.12)}
+.hero2 .h2dev{max-width:980px;margin-left:auto;margin-right:auto}
+@media(max-width:600px){.hero2{padding-top:92px}.hero2 .htitle{font-size:34px}.hero2 .hsub{font-size:15.5px;margin-top:16px}.hcta{flex-direction:column;align-items:stretch;gap:10px;margin-top:22px}.hcta .bigcta,.hcta .ghost{justify-content:center;text-align:center;padding:15px 20px}.hnote{font-size:11.5px}.h2dev{margin-top:34px}.h2dev .laptop{display:none}.h2dev{justify-content:center}}
+.fin .finh{font:600 clamp(30px,4.4vw,48px)/1.1 var(--serif);margin-bottom:12px}
+.mcard .ic,.points .ic{font-size:0}
+.mcard .ic::before,.points .ic::before{content:"";display:block;width:9px;height:9px;transform:rotate(45deg);background:linear-gradient(135deg,var(--gold),var(--rose));border-radius:2px;margin:9px}
+.badges span::before{content:"";display:inline-block;width:6px;height:6px;transform:rotate(45deg);background:var(--gold);margin-right:9px;vertical-align:middle;border-radius:1px}
+.shelf .tome .shot{margin-top:0}
 </style>
 </head>
 <body>
@@ -294,8 +319,8 @@ footer nav{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-bo
  <a class="cta-s" data-sub href="#precio"><span lang="es">Probala gratis</span><span lang="en">Try it free</span></a>
 </header>
 
-<div id="ribbon"><div class="band" id="band"></div><div class="tail"></div></div>
 <nav id="chap">
+ <a href="#demo"><span lang="es">Demo</span><span lang="en">Demo</span><i></i></a>
  <a href="#c1"><span lang="es">La biblioteca</span><span lang="en">The library</span><i></i></a>
  <a href="#c2"><span lang="es">Tu lector</span><span lang="en">Your reader</span><i></i></a>
  <a href="#c3"><span lang="es">¿Qué leo?</span><span lang="en">What to read?</span><i></i></a>
@@ -307,62 +332,59 @@ footer nav{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-bo
 
 <main id="top">
 <!-- ============ PORTADA ============ -->
-<section class="hero" id="hero">
- <div class="stage">
-  <div class="htext" id="htext">
-   <div class="kicker"><span lang="es">Érase una vez una lectora…</span><span lang="en">Once upon a time, a reader…</span></div>
-   <h1 class="htitle"><span lang="es">Tu biblioteca,<br><em>encantada</em></span><span lang="en">Your library,<br><em>enchanted</em></span></h1>
-   <p class="hsub"><span lang="es">Un rincón mágico para guardar cada libro que amaste, leer tus EPUB y PDF, y descubrir cuál será tu próxima historia.</span><span lang="en">A magical corner to keep every book you've loved, read your EPUBs and PDFs, and discover your next story.</span></p>
-  </div>
-  <div class="book" id="book">
-   <div class="pages">
-    <div class="pg l"></div>
-    <div class="pg r"><div class="cap"><span lang="es">Capítulo uno · Tu biblioteca</span><span lang="en">Chapter one · Your library</span></div><div class="plate"><img src="img/landing/lib-plate.webp" alt="Biblioteca Lila de Bookwat"></div><div class="folio">1</div></div>
-   </div>
-   <i class="bmark"></i>
-   <div class="leaf" id="lf1"><div></div><div class="b"></div></div>
-   <div class="leaf" id="lf2"><div></div><div class="b"><div class="endp"><div class="ed"><span lang="es">Edición de lectora</span><span lang="en">Reader's edition</span></div><div class="rule"></div><div class="ttl">Bookwat</div><div class="by"><span lang="es">La biblioteca de tus historias</span><span lang="en">The library of your stories</span></div><div class="rule"></div><div class="ed">MMXXVI</div></div><div class="folio">i</div></div></div>
-   <div class="cover" id="cover">
-    <div class="cfront"><div class="frm"></div>
-     <svg class="emb" viewBox="0 0 64 64" fill="none"><path d="M8 16c8-3 16-3 24 2v34c-8-5-16-5-24-2z" fill="#ebcb83"/><path d="M56 16c-8-3-16-3-24 2v34c8-5 16-5 24-2z" fill="#d4ad5c"/><path d="M32 18v34" stroke="#7a5a20" stroke-width="1.6"/><path d="M32 6l2 5 5 .5-4 3.4 1.4 5-4.4-2.8-4.4 2.8 1.4-5-4-3.4 5-.5z" fill="#fff1cc"/></svg>
-     <h2>Bookwat</h2><p>Reading Journal</p>
-     <div class="hint"><span lang="es">deslizá para abrir ↓</span><span lang="en">scroll to open ↓</span></div></div>
-    <div class="cback"><div class="paste"><div class="exlibris"><b>EX LIBRIS</b><span lang="es">Este libro pertenece a…<br><em>vos, y a todas tus historias</em></span><span lang="en">This book belongs to…<br><em>you, and all your stories</em></span></div></div></div>
-   </div>
-  </div>
-  <div class="scrollcue" id="cue"><span lang="es">✦ Seguí bajando: cada capítulo es una sorpresa ✦</span><span lang="en">✦ Keep scrolling: every chapter is a surprise ✦</span></div>
+<section class="hero2" id="hero">
+ <div class="h2in">
+  <div class="kicker"><span lang="es">Diario de lectura para lectoras</span><span lang="en">Reading journal for avid readers</span></div>
+  <h1 class="htitle"><span lang="es">Toda tu vida lectora,<br><em>en un solo lugar</em></span><span lang="en">Your whole reading life,<br><em>in one place</em></span></h1>
+  <p class="hsub"><span lang="es">Organizá tu biblioteca, leé tus EPUB y PDF en un lector propio con subrayados, y descubrí qué leer después según tu estado de ánimo y tus gustos.</span><span lang="en">Organize your library, read your EPUBs and PDFs in a reader with highlights, and find what to read next based on your mood and taste.</span></p>
+  <div class="hcta"><a class="bigcta" data-sub href="#precio"><span lang="es">Empezar 1 mes gratis</span><span lang="en">Start 1 month free</span></a><a class="ghost" href="#demo"><span lang="es">Probar la demo</span><span lang="en">Try the demo</span></a></div>
+  <div class="hnote"><span lang="es">Sin instalar nada · Celular, tablet y computadora · Español e inglés</span><span lang="en">Nothing to install · Phone, tablet and desktop · Spanish and English</span></div>
+ </div>
+ <div class="devices h2dev">
+  <div class="laptop"><div class="frame"><img src="img/landing/home.webp" alt="Inicio de Bookwat"></div></div>
+  <div class="phone"><div class="frame"><img src="img/landing/ph-lib.webp" alt="Biblioteca en el celular"></div></div>
  </div>
 </section>
 
-<!-- ============ PRÓLOGO ============ -->
+<!-- ============ DEMO ============ -->
+<section class="chapter" id="demo">
+ <div class="chead reveal"><div class="num">Demo</div>
+  <h2 class="t"><span lang="es">Probala <em>acá mismo</em></span><span lang="en">Try it <em>right here</em></span></h2>
+  <p class="lead"><span lang="es">Es la app real con libros de ejemplo. Abrí la biblioteca, el lector, el test de qué leer y el resto de las secciones. Nada se guarda fuera de tu navegador.</span><span lang="en">This is the real app with sample books. Open the library, the reader, the what-to-read test and every other section. Nothing is stored outside your browser.</span></p></div>
+ <div class="tabs reveal"><div class="g" id="tDemo"><button class="on" data-d="m"><span lang="es">Celular</span><span lang="en">Phone</span></button><button data-d="d"><span lang="es">Computadora</span><span lang="en">Desktop</span></button></div></div>
+ <div class="demowrap reveal"><div class="demoframe" id="demoframe" data-d="m"><iframe id="demoif" title="Bookwat demo" loading="lazy" allow="fullscreen"></iframe></div></div>
+ <p class="caption reveal"><span lang="es">Los libros y autoras de la demo son inventados. Podés borrar todo y empezar de cero para ver cómo se siente tu propia biblioteca.</span><span lang="en">The books and authors in the demo are made up. You can delete everything and start from scratch to see how your own library feels.</span></p>
+ <div style="text-align:center;margin-top:22px"><a class="bigcta" data-sub href="#precio"><span lang="es">Empezar 1 mes gratis</span><span lang="en">Start 1 month free</span></a></div>
+</section>
+
+<!-- ============ PRESENTACIÓN ============ -->
 <section class="chapter" style="padding-top:40px">
- <div class="orn-div reveal">✦ ❦ ✦</div>
- <p class="lead cap reveal" style="margin-top:28px"><span lang="es">Las lectoras no guardamos libros: guardamos mundos. El enemies to lovers que nos hizo trasnochar, la saga que esperamos un año entero, la frase que subrayamos tres veces. Bookwat nació para que todo eso viva en un solo lugar, tan lindo como las historias que contiene. No es una planilla ni una lista: es tu biblioteca soñada, con velas, pétalos y luz de luna.</span><span lang="en">Readers don't just keep books: we keep worlds. The enemies-to-lovers that kept us up all night, the series we waited a whole year for, the line we underlined three times. Bookwat was made so all of that can live in one place, as beautiful as the stories inside it. It's not a spreadsheet or a list: it's your dream library, with candles, petals and moonlight.</span></p>
+ <p class="lead cap reveal" style="margin-top:28px"><span lang="es">Llevás el registro de tus lecturas en notas, planillas y capturas sueltas. Bookwat lo reúne todo: qué leíste, qué estás leyendo, qué sigue, tus puntajes, tus citas y tus metas del año, con un lector de EPUB y PDF incluido.</span><span lang="en">You keep track of your reading in notes, spreadsheets and loose screenshots. Bookwat brings it together: what you've read, what you're reading, what's next, your ratings, quotes and yearly goals, with an EPUB and PDF reader included.</span></p>
 </section>
 
 <!-- ============ I · LA BIBLIOTECA ============ -->
 <section class="chapter" id="c1">
- <div class="chead reveal"><div class="num">Capítulo I</div>
-  <h2 class="t"><span lang="es">Una biblioteca que <em>respira</em></span><span lang="en">A library that <em>breathes</em></span></h2>
-  <p class="lead"><span lang="es">Tus libros se acomodan solos en los estantes de un palacio de cuento. Las velas titilan, la chimenea crepita y caen pétalos mientras elegís qué leer.</span><span lang="en">Your books arrange themselves on the shelves of a fairytale palace. Candles flicker, the fireplace crackles and petals fall while you choose what to read.</span></p></div>
+ <div class="chead reveal"><div class="num">01</div>
+  <h2 class="t"><span lang="es">Tu biblioteca, <em>ordenada</em></span><span lang="en">Your library, <em>organized</em></span></h2>
+  <p class="lead"><span lang="es">Tus libros se acomodan solos en estantes ilustrados, en dos estilos a elegir. Verlos reunidos hace más fácil decidir qué leer.</span><span lang="en">Your books arrange themselves on illustrated shelves, in two styles to choose from. Seeing them together makes it easier to decide what to read.</span></p></div>
  <div class="tabs reveal">
-  <div class="g" id="tTheme"><button class="on" data-v="lila">💜 Lila</button><button data-v="clas"><span lang="es">🕯️ Clásica</span><span lang="en">🕯️ Classic</span></button></div>
+  <div class="g" id="tTheme"><button class="on" data-v="lila">Lila</button><button data-v="clas"><span lang="es">Clásica</span><span lang="en">Classic</span></button></div>
   <div class="g" id="tView"><button class="on" data-v="cov"><span lang="es">Portadas</span><span lang="en">Covers</span></button><button data-v="sp"><span lang="es">Lomos</span><span lang="en">Spines</span></button></div>
  </div>
  <div class="frame libbox reveal" data-zoom><img loading="lazy" id="libimg" alt="Biblioteca"></div>
- <p class="caption reveal"><span lang="es">Probá los botones: dos bibliotecas, dos formas de mirar tus libros.</span><span lang="en">Try the buttons: two libraries, two ways to see your books.</span></p>
+ <p class="caption reveal"><span lang="es">Probá los botones: dos estilos de biblioteca, dos formas de ver tus libros.</span><span lang="en">Try the buttons: two library styles, two ways to see your books.</span></p>
  <div class="mini3">
-  <div class="mcard reveal"><div class="ic">🔤</div><b lang="es">Ordenada como te gusta</b><b lang="en">Sorted your way</b><p lang="es">Por título, por apellido de la autora, por saga o por las más spicy. Saltá a cualquier letra en un toque.</p><p lang="en">By title, author's last name, series, or spiciest. Jump to any letter with one tap.</p></div>
-  <div class="mcard reveal d1"><div class="ic">🌶️</div><b lang="es">Filtros de lectora</b><b lang="en">Reader filters</b><p lang="es">Tropos, nivel de spicy, leyendo, por leer, favoritos, abandonados… encontrás cualquier libro al instante.</p><p lang="en">Tropes, spice level, reading, TBR, favorites, DNF… find any book instantly.</p></div>
-  <div class="mcard reveal d2"><div class="ic">📇</div><b lang="es">Una ficha para cada libro</b><b lang="en">A card for every book</b><p lang="es">Portada, saga, páginas, fechas, puntaje, tu book boyfriend, citas y notas: todo lo que ese libro significó para vos.</p><p lang="en">Cover, series, pages, dates, rating, your book boyfriend, quotes and notes: everything that book meant to you.</p></div>
+  <div class="mcard reveal"><div class="ic"></div><b lang="es">Ordenada como te gusta</b><b lang="en">Sorted your way</b><p lang="es">Por título, por apellido de la autora, por saga o por las más spicy. Saltá a cualquier letra en un toque.</p><p lang="en">By title, author's last name, series, or spiciest. Jump to any letter with one tap.</p></div>
+  <div class="mcard reveal d1"><div class="ic"></div><b lang="es">Filtros de lectora</b><b lang="en">Reader filters</b><p lang="es">Tropos, nivel de spicy, leyendo, por leer, favoritos, abandonados… encontrás cualquier libro al instante.</p><p lang="en">Tropes, spice level, reading, TBR, favorites, DNF… find any book instantly.</p></div>
+  <div class="mcard reveal d2"><div class="ic"></div><b lang="es">Una ficha para cada libro</b><b lang="en">A card for every book</b><p lang="es">Portada, saga, páginas, fechas, puntaje, tu book boyfriend, citas y notas: todo lo que ese libro significó para vos.</p><p lang="en">Cover, series, pages, dates, rating, your book boyfriend, quotes and notes: everything that book meant to you.</p></div>
  </div>
 </section>
 
 <!-- ============ II · EL LECTOR ============ -->
 <section class="chapter" id="c2">
- <div class="chead reveal"><div class="num">Capítulo II</div>
-  <h2 class="t"><span lang="es">Leé adentro de <em>tu mundo</em></span><span lang="en">Read inside <em>your world</em></span></h2>
-  <p class="lead"><span lang="es">Subí tus EPUB y PDF y leelos en un lector hecho a mano, que se viste con los colores de tu biblioteca. Nada de pantallas frías.</span><span lang="en">Upload your EPUBs and PDFs and read them in a handcrafted reader dressed in your library's colors. No cold screens.</span></p></div>
+ <div class="chead reveal"><div class="num">02</div>
+  <h2 class="t"><span lang="es">Un lector <em>hecho para leer</em></span><span lang="en">A reader <em>made for reading</em></span></h2>
+  <p class="lead"><span lang="es">Subí tus EPUB y PDF y leelos en un lector con páginas, subrayados, notas y modo noche, que respeta los colores de tu biblioteca.</span><span lang="en">Upload your EPUBs and PDFs and read them in a reader with pages, highlights, notes and night mode, matching your library's colors.</span></p></div>
  <div class="two">
   <div class="media readerduo reveal">
    <div class="laptop"><div class="frame" data-zoom><img loading="lazy" src="img/landing/reader-desk.webp" alt="Lector de EPUB de Bookwat"></div></div>
@@ -370,10 +392,10 @@ footer nav{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-bo
   </div>
   <div class="reveal d1">
    <ul class="points">
-    <li><div class="ic">📖</div><div><b lang="es">Pasá la hoja o deslizá hacia abajo</b><b lang="en">Turn the page or scroll down</b><span lang="es">Como un libro de verdad, con doble página en la compu, o leyendo de corrido en el celular.</span><span lang="en">Like a real book, with a two-page spread on desktop, or as one continuous scroll on your phone.</span></div></li>
-    <li><div class="ic">✦</div><div><b lang="es">Subrayá y se guarda sola</b><b lang="en">Highlight and it saves itself</b><span lang="es">Cada frase que marcás con color aparece en tus Citas favoritas, con tu nota.</span><span lang="en">Every line you highlight lands in your favorite Quotes, with your note.</span></div></li>
-    <li><div class="ic">⏱</div><div><b lang="es">Tu tiempo de lectura, solito</b><b lang="en">Your reading time, tracked</b><span lang="es">Cuánto leíste hoy, esta semana y en cada libro. Y cuando lo terminás, lo festejamos.</span><span lang="en">How much you read today, this week and per book. And when you finish it, we celebrate.</span></div></li>
-    <li><div class="ic">🌙</div><div><b lang="es">Papel, letra y noche</b><b lang="en">Paper, type and night</b><span lang="es">Papel del tema, sepia, blanco o noche; tamaño, tipografía e interlineado a tu gusto.</span><span lang="en">Theme, sepia, white or night paper; size, typeface and line spacing just how you like.</span></div></li>
+    <li><div class="ic"></div><div><b lang="es">Pasá la hoja o deslizá hacia abajo</b><b lang="en">Turn the page or scroll down</b><span lang="es">Como un libro de verdad, con doble página en la compu, o leyendo de corrido en el celular.</span><span lang="en">Like a real book, with a two-page spread on desktop, or as one continuous scroll on your phone.</span></div></li>
+    <li><div class="ic"></div><div><b lang="es">Subrayá y se guarda sola</b><b lang="en">Highlight and it saves itself</b><span lang="es">Cada frase que marcás con color aparece en tus Citas favoritas, con tu nota.</span><span lang="en">Every line you highlight lands in your favorite Quotes, with your note.</span></div></li>
+    <li><div class="ic"></div><div><b lang="es">Tu tiempo de lectura, solito</b><b lang="en">Your reading time, tracked</b><span lang="es">Cuánto leíste hoy, esta semana y en cada libro. Y cuando lo terminás, lo festejamos.</span><span lang="en">How much you read today, this week and per book. And when you finish it, we celebrate.</span></div></li>
+    <li><div class="ic"></div><div><b lang="es">Papel, letra y noche</b><b lang="en">Paper, type and night</b><span lang="es">Papel del tema, sepia, blanco o noche; tamaño, tipografía e interlineado a tu gusto.</span><span lang="en">Theme, sepia, white or night paper; size, typeface and line spacing just how you like.</span></div></li>
    </ul>
   </div>
  </div>
@@ -389,14 +411,14 @@ footer nav{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-bo
 
 <!-- ============ III · ¿QUÉ LEO? ============ -->
 <section class="chapter" id="c3">
- <div class="chead reveal"><div class="num">Capítulo III</div>
+ <div class="chead reveal"><div class="num">03</div>
   <h2 class="t"><span lang="es">¿Qué leo <em>hoy</em>?</span><span lang="en">What do I read <em>today</em>?</span></h2>
   <p class="lead"><span lang="es">Contestás cómo te sentís, cuánto romance querés, qué tan spicy y qué tropos te tientan… y la app elige entre los libros de tu propia pila.</span><span lang="en">Tell it how you feel, how much romance you want, how spicy, and which tropes tempt you… and the app picks from your own TBR.</span></p></div>
  <div class="two rev">
   <div class="media reveal"><div class="frame" data-zoom><img loading="lazy" src="img/landing/quiz.webp" alt="Test ¿Qué leo?"></div></div>
   <div class="quiz reveal d1">
    <h3><span lang="es">¿Qué te pide <em>el corazón</em>?</span><span lang="en">What does your <em>heart</em> want?</span></h3>
-   <p class="q"><span lang="es">Probalo acá mismo 👇</span><span lang="en">Try it right here 👇</span></p>
+   <p class="q"><span lang="es">Elegí cómo te sentís hoy</span><span lang="en">Pick how you feel today</span></p>
    <div class="moods" id="moods"></div>
    <div class="qres" id="qres"><div class="bk" id="qbk">📖</div><div><small lang="es">Tu próxima lectura podría ser</small><small lang="en">Your next read could be</small><b id="qt"></b><p id="qp"></p></div></div>
   </div>
@@ -405,7 +427,7 @@ footer nav{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-bo
 
 <!-- ============ IV · ADN ============ -->
 <section class="chapter" id="c4">
- <div class="chead reveal"><div class="num">Capítulo IV</div>
+ <div class="chead reveal"><div class="num">04</div>
   <h2 class="t"><span lang="es">Tu <em>ADN</em> lector</span><span lang="en">Your reader <em>DNA</em></span></h2>
   <p class="lead"><span lang="es">Con cada libro que terminás, la app descubre quién sos como lectora: tus tropos favoritos, tu termómetro de spicy y tus red flags.</span><span lang="en">With every book you finish, the app discovers who you are as a reader: your favorite tropes, your spice thermometer and your red flags.</span></p></div>
  <div class="two">
@@ -416,27 +438,27 @@ footer nav{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-bo
     <polygon class="shape" points="0,-108 86,-50 60,35 0,62 -95,55 -52,-30" fill="#f2a7c9" stroke="#f2a7c9" stroke-width="3"/>
     <g font-family="Cormorant Garamond,serif" font-size="17" font-weight="600" fill="#e7d6fa" text-anchor="middle"><text x="0" y="-130">Romance</text><text x="130" y="-62">Spicy</text><text x="132" y="74">Dark</text><text x="0" y="146" lang="es">Emoción</text><text x="0" y="146" lang="en">Emotion</text><text x="-132" y="74">Comfort</text><text x="-134" y="-62" lang="es">Fantasía</text><text x="-134" y="-62" lang="en">Fantasy</text></g>
    </svg>
-   <div class="dnatag">⚔️ <span lang="es">Adicta al Enemies to Lovers</span><span lang="en">Enemies-to-Lovers addict</span></div>
+   <div class="dnatag"><span lang="es">Adicta al Enemies to Lovers</span><span lang="en">Enemies-to-Lovers addict</span></div>
   </div>
  </div>
 </section>
 
 <!-- ============ V · TU AÑO LECTOR ============ -->
 <section class="chapter" id="c5">
- <div class="chead reveal"><div class="num">Capítulo V</div>
+ <div class="chead reveal"><div class="num">05</div>
   <h2 class="t"><span lang="es">Todo tu <em>año lector</em></span><span lang="en">Your whole <em>reading year</em></span></h2>
   <p class="lead"><span lang="es">Cuatro tomos más en tu estante. Tocá cualquiera para verlo de cerca.</span><span lang="en">Four more volumes on your shelf. Tap any of them for a closer look.</span></p></div>
  <div class="shelf">
-  <div class="tome reveal" style="--c1:#8e5cb8;--c2:#5a3b80" data-zoom><span class="e">🏆</span><div class="shot"><img loading="lazy" src="img/landing/reto.webp" alt="Reto"></div><h4 lang="es">Reto anual</h4><h4 lang="en">Yearly challenge</h4><p lang="es">Ponete una meta de libros y mirá cómo se llena mes a mes.</p><p lang="en">Set a book goal and watch it fill up month by month.</p></div>
-  <div class="tome reveal d1" style="--c1:#e57fab;--c2:#a94f7c" data-zoom><span class="e">🛍</span><div class="shot"><img loading="lazy" src="img/landing/wish.webp" alt="Wishlist"></div><h4>Wishlist</h4><p lang="es">Los libros que querés, con prioridad y precio, para no olvidar ninguno.</p><p lang="en">The books you want, with priority and price, so you never forget one.</p></div>
-  <div class="tome reveal d2" style="--c1:#c9a24f;--c2:#8a6526" data-zoom><span class="e">📅</span><div class="shot"><img loading="lazy" src="img/landing/soon.webp" alt="Lo que viene"></div><h4 lang="es">Lo que viene</h4><h4 lang="en">Coming soon</h4><p lang="es">Los próximos lanzamientos de tus autoras, con cuenta regresiva y aviso.</p><p lang="en">Your authors' upcoming releases, with a countdown and reminders.</p></div>
-  <div class="tome reveal d3" style="--c1:#4f7fa8;--c2:#2d4f73" data-zoom><span class="e">💬</span><div class="shot"><img loading="lazy" src="img/landing/citas.webp" alt="Citas"></div><h4 lang="es">Citas</h4><h4 lang="en">Quotes</h4><p lang="es">Tu cuaderno de frases favoritas, las que subrayaste y las que anotaste.</p><p lang="en">Your notebook of favorite lines, highlighted or written down.</p></div>
+  <div class="tome reveal" style="--c1:#8e5cb8;--c2:#5a3b80" data-zoom><div class="shot"><img loading="lazy" src="img/landing/reto.webp" alt="Reto"></div><h4 lang="es">Reto anual</h4><h4 lang="en">Yearly challenge</h4><p lang="es">Ponete una meta de libros y mirá cómo se llena mes a mes.</p><p lang="en">Set a book goal and watch it fill up month by month.</p></div>
+  <div class="tome reveal d1" style="--c1:#e57fab;--c2:#a94f7c" data-zoom><div class="shot"><img loading="lazy" src="img/landing/wish.webp" alt="Wishlist"></div><h4>Wishlist</h4><p lang="es">Los libros que querés, con prioridad y precio, para no olvidar ninguno.</p><p lang="en">The books you want, with priority and price, so you never forget one.</p></div>
+  <div class="tome reveal d2" style="--c1:#c9a24f;--c2:#8a6526" data-zoom><div class="shot"><img loading="lazy" src="img/landing/soon.webp" alt="Lo que viene"></div><h4 lang="es">Lo que viene</h4><h4 lang="en">Coming soon</h4><p lang="es">Los próximos lanzamientos de tus autoras, con cuenta regresiva y aviso.</p><p lang="en">Your authors' upcoming releases, with a countdown and reminders.</p></div>
+  <div class="tome reveal d3" style="--c1:#4f7fa8;--c2:#2d4f73" data-zoom><div class="shot"><img loading="lazy" src="img/landing/citas.webp" alt="Citas"></div><h4 lang="es">Citas</h4><h4 lang="en">Quotes</h4><p lang="es">Tu cuaderno de frases favoritas, las que subrayaste y las que anotaste.</p><p lang="en">Your notebook of favorite lines, highlighted or written down.</p></div>
  </div>
 </section>
 
 <!-- ============ VI · SIEMPRE CON VOS ============ -->
 <section class="chapter" id="c6">
- <div class="chead reveal"><div class="num">Capítulo VI</div>
+ <div class="chead reveal"><div class="num">06</div>
   <h2 class="t"><span lang="es">Siempre <em>con vos</em></span><span lang="en">Always <em>with you</em></span></h2>
   <p class="lead"><span lang="es">En la compu, en la tablet o en el celular, en el colectivo o en la cama. Creás tu cuenta y tu biblioteca te sigue a todos lados.</span><span lang="en">On your computer, tablet or phone, on the bus or in bed. Create your account and your library follows you everywhere.</span></p></div>
  <div class="devices reveal">
@@ -444,17 +466,17 @@ footer nav{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-bo
   <div class="phone"><div class="frame" data-zoom><img loading="lazy" src="img/landing/ph-lib.webp" alt="Biblioteca en el celular"></div></div>
  </div>
  <div class="badges reveal">
-  <span>☁️ <span lang="es">Sincronizada en tu nube</span><span lang="en">Synced to your cloud</span></span>
-  <span>📱 <span lang="es">Celular, tablet y compu</span><span lang="en">Phone, tablet & desktop</span></span>
-  <span>🌎 Español · English</span>
-  <span>🔒 <span lang="es">Tus datos son tuyos</span><span lang="en">Your data is yours</span></span>
-  <span>✨ <span lang="es">Sin instalar nada</span><span lang="en">Nothing to install</span></span>
+  <span><span lang="es">Sincronizada en tu nube</span><span lang="en">Synced to your cloud</span></span>
+  <span><span lang="es">Celular, tablet y compu</span><span lang="en">Phone, tablet & desktop</span></span>
+  <span>Español · English</span>
+  <span><span lang="es">Tus datos son tuyos</span><span lang="en">Your data is yours</span></span>
+  <span><span lang="es">Sin instalar nada</span><span lang="en">Nothing to install</span></span>
  </div>
 </section>
 
 <!-- ============ PRECIO ============ -->
 <section class="chapter" id="precio">
- <div class="chead reveal"><div class="num"><span lang="es">Tu ficha de socia</span><span lang="en">Your library card</span></div>
+ <div class="chead reveal"><div class="num"><span lang="es">Tu suscripción</span><span lang="en">Your membership</span></div>
   <h2 class="t"><span lang="es">El primer mes <em>es un regalo</em></span><span lang="en">Your first month <em>is a gift</em></span></h2></div>
  <div class="pricewrap reveal">
   <div class="card">
@@ -464,7 +486,7 @@ footer nav{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-bo
    <div class="price"><b id="pv"></b><span><span lang="es">/ mes</span><span lang="en">/ month</span></span></div>
    <div class="free"><span lang="es">Los primeros 30 días no pagás nada</span><span lang="en">The first 30 days are on us</span></div>
    <ul class="inc">
-    <li lang="es">Biblioteca encantada Lila y Clásica</li><li lang="en">Enchanted Lila and Classic libraries</li>
+    <li lang="es">Biblioteca ilustrada, estilo Lila y Clásico</li><li lang="en">Illustrated library, Lila and Classic styles</li>
     <li lang="es">Lector de EPUB y PDF con subrayados</li><li lang="en">EPUB & PDF reader with highlights</li>
     <li lang="es">¿Qué leo?, ADN lector, Reto, Wishlist y Citas</li><li lang="en">What to read?, Reader DNA, Challenge, Wishlist & Quotes</li>
     <li lang="es">Tu cuenta en la nube, en todos tus dispositivos</li><li lang="en">Your cloud account on all your devices</li>
@@ -474,14 +496,14 @@ footer nav{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-bo
     <a class="pp" id="bPP" data-sub href="#" target="_blank" rel="noopener"><span lang="es">Suscribirme con</span><span lang="en">Subscribe with</span> <span><i>Pay</i><i>Pal</i></span></a>
    </div>
    <p class="fine"><span lang="es">El precio es de USD 7,60 por mes. PayPal cobra en dólares; Mercado Pago cobra el equivalente en pesos argentinos. Los montos en pesos son aproximados y dependen del tipo de cambio. Cancelás cuando quieras desde tu cuenta de pago.</span><span lang="en">The price is USD 7.60 per month. PayPal charges in US dollars; Mercado Pago charges the equivalent in Argentine pesos. Peso amounts are approximate and depend on the exchange rate. Cancel anytime from your payment account.</span></p>
-   <a class="demo-link" id="bDemo" href="#" target="_blank" rel="noopener"><span lang="es">o mirá primero la demo ✦</span><span lang="en">or see the demo first ✦</span></a>
+   <a class="demo-link" id="bDemo" href="#demo"><span lang="es">o probá primero la demo</span><span lang="en">or try the demo first</span></a>
   </div>
  </div>
 </section>
 
 <!-- ============ PREGUNTAS ============ -->
 <section class="chapter" id="faq">
- <div class="chead reveal"><div class="num"><span lang="es">Notas al margen</span><span lang="en">Notes in the margin</span></div><h2 class="t"><span lang="es">Preguntas <em>frecuentes</em></span><span lang="en">Frequently asked <em>questions</em></span></h2></div>
+ <div class="chead reveal"><div class="num"><span lang="es">Ayuda</span><span lang="en">Help</span></div><h2 class="t"><span lang="es">Preguntas <em>frecuentes</em></span><span lang="en">Frequently asked <em>questions</em></span></h2></div>
  <div class="faq reveal">
   <details><summary><span lang="es">¿Tengo que instalar algo?</span><span lang="en">Do I need to install anything?</span></summary><p lang="es">No. Bookwat se abre desde el navegador en el celular, la tablet o la compu. Si querés, la agregás a la pantalla de inicio y queda como una app más.</p><p lang="en">No. Bookwat opens in your browser on phone, tablet or computer. If you like, add it to your home screen and it feels like any other app.</p></details>
   <details><summary><span lang="es">¿Qué libros puedo leer en el lector?</span><span lang="en">Which books can I read in the reader?</span></summary><p lang="es">Archivos EPUB y PDF sin protección (DRM). Los libros comprados en Kindle no se pueden abrir porque están protegidos.</p><p lang="en">EPUB and PDF files without DRM protection. Books bought on Kindle can't be opened because they're protected.</p></details>
@@ -494,10 +516,10 @@ footer nav{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-bo
 
 <!-- ============ FIN ============ -->
 <section class="fin">
- <div class="end reveal"><span lang="es">Fin</span><span lang="en">The End</span></div>
- <p class="reveal"><span lang="es">…o mejor dicho, el comienzo de tu biblioteca más linda. Y vivieron leyendo felices para siempre.</span><span lang="en">…or rather, the beginning of your most beautiful library. And they read happily ever after.</span></p>
- <a class="bigcta reveal" data-sub href="#precio">✦ <span lang="es">Empezar mi mes gratis</span><span lang="en">Start my free month</span></a><br>
- <a class="ghost reveal" id="bDemo2" href="#" target="_blank" rel="noopener"><span lang="es">Ver la demo</span><span lang="en">See the demo</span></a>
+ <h2 class="finh reveal"><span lang="es">Probala durante un mes, sin costo</span><span lang="en">Try it for a month, free</span></h2>
+ <p class="reveal"><span lang="es">Si no es para vos, cancelás antes de que termine la prueba y no se te cobra nada.</span><span lang="en">If it's not for you, cancel before the trial ends and you won't be charged.</span></p>
+ <a class="bigcta reveal" data-sub href="#precio"><span lang="es">Empezar mi mes gratis</span><span lang="en">Start my free month</span></a><br>
+ <a class="ghost reveal" href="#demo"><span lang="es">Ver la demo</span><span lang="en">See the demo</span></a>
 </section>
 </main>
 
@@ -516,7 +538,7 @@ const CONFIG={
   mxnPorUSD:18.49,           // pesos mexicanos por 1 dólar
   linkMercadoPago:'https://mpago.la/2Wwd38p',
   linkPayPal:'https://www.paypal.com/webapps/billing/plans/subscribe?plan_id=P-1JH63687MF956341SNMC5LHY',
-  linkDemo:'demo.html',
+  urlDemo:'https://readingjournal.estrategia.site/app.html?demo',
   linkTerminos:'#', linkPrivacidad:'#'
 };
 /* ================================================== */
@@ -530,7 +552,7 @@ function setLang(l){LANG=l;document.documentElement.className=l;document.documen
 $$('.lang button').forEach(b=>b.onclick=()=>setLang(b.dataset.l));
 
 // enlaces
-$('#bMP').href=CONFIG.linkMercadoPago;$('#bPP').href=CONFIG.linkPayPal;$('#bDemo').href=$('#bDemo2').href=CONFIG.linkDemo;$('#lTerms').href=CONFIG.linkTerminos;$('#lPriv').href=CONFIG.linkPrivacidad;$('#yr').textContent=new Date().getFullYear();
+$('#bMP').href=CONFIG.linkMercadoPago;$('#bPP').href=CONFIG.linkPayPal;$('#bDemo').href='#demo';$('#lTerms').href=CONFIG.linkTerminos;$('#lPriv').href=CONFIG.linkPrivacidad;$('#yr').textContent=new Date().getFullYear();
 
 // precio
 const tz=(Intl.DateTimeFormat().resolvedOptions().timeZone||'');
@@ -543,20 +565,12 @@ function price(){
 $$('#cur button').forEach(b=>b.onclick=()=>{CUR=b.dataset.c;price()});
 
 // cabecera, cinta, capítulos, portada
-const lf1=$('#lf1'),lf2=$('#lf2'),hd=$('#hd'),band=$('#band'),cover=$('#cover'),book=$('#book'),ht=$('#htext'),cue=$('#cue'),hero=$('#hero');
+const hd=$('#hd');
 const chs=$$('#chap a').map(a=>[a,document.querySelector(a.getAttribute('href'))]);
 let tick=false;
 function onScroll(){if(tick)return;tick=true;requestAnimationFrame(()=>{tick=false;
-  const y=scrollY,H=document.documentElement.scrollHeight-innerHeight;
-  hd.classList.toggle('on',y>30);band.style.height=Math.max(0,Math.min(1,y/H))*(innerHeight-22)+'px';
-  if(!RM){const p=Math.max(0,Math.min(1,y/(hero.offsetHeight-innerHeight)));
-    const open=easeIO(Math.min(1,p/.7)),sh=(1-open);
-    cover.style.transform=`rotateY(${-180*open}deg)`;
-    lf1.style.transform=`rotateY(${-178*easeIO(Math.max(0,Math.min(1,(p-.08)/.66)))}deg)`;
-    lf2.style.transform=`rotateY(${-176*easeIO(Math.max(0,Math.min(1,(p-.16)/.62)))}deg)`;
-    book.classList.toggle('op',open>.5);
-    book.style.transform=`translateX(${-25*sh}%) translateY(${-4*p}vh) rotateX(${10*sh}deg) scale(${1+(innerWidth>700?.1:0)*easeIO(Math.max(0,(p-.7)/.3))})`;
-    ht.style.opacity=1-p*1.6;ht.style.transform=`translateY(${-60*p}px)`;cue.style.opacity=p>.7?(p-.7)/.3:0}
+  const y=scrollY;
+  hd.classList.toggle('on',y>30);
   let cur=null;chs.forEach(([a,s])=>{if(s&&s.getBoundingClientRect().top<innerHeight*.5)cur=a});chs.forEach(([a])=>a.classList.toggle('on',a===cur));
 })}
 const easeIO=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
@@ -599,7 +613,7 @@ lb.onclick=()=>lb.classList.remove('on');addEventListener('keydown',e=>{if(e.key
 // cielo: estrellas, luciérnagas y pétalos
 const cv=$('#fx'),cx=cv.getContext('2d');let W,H,parts=[];
 function size(){const d=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;cv.width=W*d;cv.height=H*d;cx.setTransform(d,0,0,d,0,0)}
-function mk(){const n=Math.round(Math.min(90,W/14));parts=[];for(let i=0;i<n;i++){const k=Math.random();parts.push({t:k<.55?'s':k<.8?'f':'p',x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.6+.4,a:Math.random()*6.28,v:Math.random()*.4+.15,s:Math.random()*.02+.005})}}
+function mk(){const n=Math.round(Math.min(90,W/14));parts=[];for(let i=0;i<n;i++){const k=Math.random();parts.push({t:'s',x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.6+.4,a:Math.random()*6.28,v:Math.random()*.4+.15,s:Math.random()*.02+.005})}}
 function draw(){cx.clearRect(0,0,W,H);const sy=scrollY*.05;
   for(const p of parts){p.a+=p.s;
     if(p.t==='s'){const o=.35+.35*Math.sin(p.a*2);cx.fillStyle=`rgba(255,246,230,${o})`;cx.beginPath();cx.arc(p.x,(p.y-sy+H*10)%H,p.r,0,6.28);cx.fill()}
@@ -607,6 +621,14 @@ function draw(){cx.clearRect(0,0,W,H);const sy=scrollY*.05;
     else{p.y+=p.v*1.4;p.x+=Math.sin(p.a)*.8;if(p.y>H+12){p.y=-12;p.x=Math.random()*W}cx.save();cx.translate(p.x,p.y);cx.rotate(p.a*2);cx.fillStyle='rgba(242,167,201,.75)';cx.beginPath();cx.ellipse(0,0,5.5,3.2,0,0,6.28);cx.fill();cx.restore()}}
   requestAnimationFrame(draw)}
 size();mk();if(!RM)draw();addEventListener('resize',()=>{size();mk()});
+
+// demo embebida
+const df=$('#demoframe'),dif=$('#demoif');let dLoaded=false;
+function demoSrc(){const h=location.hostname;return (!h||h==='localhost'||h==='127.0.0.1'||h.indexOf('readingjournal.')===0)?'app.html?demo':CONFIG.urlDemo}
+function loadDemo(){if(dLoaded)return;dLoaded=true;dif.src=demoSrc()}
+new IntersectionObserver((es,o)=>{if(es.some(e=>e.isIntersecting)){loadDemo();o.disconnect()}},{rootMargin:'600px 0px'}).observe(df);
+$$('#tDemo button').forEach(b=>b.onclick=()=>{df.dataset.d=b.dataset.d;$$('#tDemo button').forEach(x=>x.classList.toggle('on',x===b))});
+addEventListener('message',e=>{if(e.data&&e.data.bw==='subscribe'){const t=document.getElementById('precio');if(t)t.scrollIntoView({behavior:'smooth'})}});
 
 setLang(LANG);onScroll();
 })();

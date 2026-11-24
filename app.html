@@ -2135,6 +2135,7 @@ window.MB={demo:DEMO,get S(){return S},get covers(){return covers},save,toast,es
   if(!DEMO){SY.init();document.addEventListener('visibilitychange',()=>{if(!document.hidden&&SY.user)SY.pull(false)})}
 })();
 })();
+document.addEventListener('click',e=>{const l=e.target.closest&&e.target.closest('a[href$="#precio"]');if(l&&window.parent!==window){e.preventDefault();try{parent.postMessage({bw:'subscribe'},'*')}catch(x){}}});
 </script>
 </body>
 </html>
