@@ -5,7 +5,7 @@ require_once __DIR__ . '/lib/export.php';
 /* Panel del dueño: resumen, landing (visitas y clicks), clientes, pagos y diagnóstico del sistema.
    NO muestra la biblioteca de cada lectora (libros, notas, citas): solo cuenta y pago. */
 sesion('bw_admin');
-$pdo = db(); $adminEmail = normalizar_email((string)cfg('ADMIN_EMAIL')); $adminHash = (string)cfg('ADMIN_PASSWORD_HASH');
+$pdo = db(); $adminEmail = normalizar_email((string)cfg('ADMIN_EMAIL')); $adminHash = (string)cfg('ADMIN_PASSWORD_HASH'); $adminPlain = (string)cfg('ADMIN_PASSWORD');
 header('X-Robots-Tag: noindex');
 
 function plata(int $cent, string $mon = 'ARS'): string { return ($mon === 'ARS' ? '$ ' : $mon . ' ') . number_format($cent / 100, 0, ',', '.'); }
@@ -29,7 +29,7 @@ if (empty($_SESSION['admin']) || (time() - (int)($_SESSION['admin_t'] ?? 0)) > 8
     $e = normalizar_email((string)($_POST['email'] ?? '')); $p = (string)($_POST['clave'] ?? '');
     if (!csrf_ok()) $err = 'La sesión venció. Recargá la página.';
     elseif (freno_bloqueado('admin', '', 5, 15)) $err = 'Demasiados intentos. Esperá unos minutos.';
-    elseif ($adminHash !== '' && $adminEmail !== '' && hash_equals($adminEmail, $e) && password_verify($p, $adminHash)) {
+    elseif ($adminEmail !== '' && hash_equals($adminEmail, $e) && (($adminHash !== '' && password_verify($p, $adminHash)) || ($adminPlain !== '' && hash_equals($adminPlain, $p)))) {
       session_regenerate_id(true); $_SESSION['admin'] = true; $_SESSION['admin_t'] = time(); freno_limpiar('admin', ''); auditar($e, 'admin_login'); redir();
     } else { freno_falla('admin', ''); auditar($e ?: '-', 'admin_login_fallido'); $err = 'Datos incorrectos.'; }
   }

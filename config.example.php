@@ -30,6 +30,7 @@ return [
   'ADMIN_EMAIL'         => 'estrategia.datos@estrategia.site',
   // php -r "echo password_hash('TU-CLAVE-LARGA', PASSWORD_DEFAULT);"
   'ADMIN_PASSWORD_HASH' => '',
+  'ADMIN_PASSWORD'      => '', // alternativa simple: tu clave escrita acá (solo si no usás el hash)
 
   // --- Centro de operaciones ---
   // No hace falta completarlo: el token se genera desde admin.php → "Conectar con el Centro".
