@@ -19,6 +19,12 @@ En el Administrador de archivos, dentro de la carpeta del sitio (`public_html` d
 ## 4) Probar
 Abrí https://readingjournal.estrategia.site → Ajustes → **Cuenta** → Crear cuenta. Entrá desde otro dispositivo con el mismo correo: la biblioteca y las portadas aparecen iguales.
 
+## Lector de libros (EPUB y PDF)
+En la app: pestaña **Mi lector** → subir un EPUB o PDF (sin DRM). Se lee en el celular, la tablet o la computadora, con el tema (Lila/Clásica) y el idioma elegidos. Lleva el tiempo de lectura, el progreso, el estado del libro (Leyendo → Terminado) y la racha; las frases subrayadas pasan solas a **Citas**.
+- Los archivos viven en el dispositivo y, con cuenta, también en `private/books/<usuaria>/` (bloqueada por `.htaccess`).
+- Las librerías del lector están en `vendor/` (PDF.js y JSZip, locales: no usan CDN). El lector se carga solo cuando se abre (`reader/`).
+- Límites en `config.php`: `max_book_mb` (por libro, 90 MB) y `quota_mb` (por usuaria, 600 MB). Si tu hosting limita las subidas, subí `upload_max_filesize` y `post_max_size` en hPanel → PHP.
+
 ## Cómo funciona
 - Sin cuenta, la app guarda todo en el navegador (como siempre).
 - Con cuenta, cada cambio se sube solo a los pocos segundos y se baja al abrir la app desde otro dispositivo. Si no hay internet, sigue funcionando y sube después.

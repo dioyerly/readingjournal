@@ -10,6 +10,9 @@ $maxState = (int)cfg('max_state_kb', 4096) * 1024;
 $maxCover = (int)cfg('max_cover_kb', 700) * 1024;
 $coverId  = static fn($v): string => preg_match('/^[A-Za-z0-9]{3,24}$/', (string)$v) ? (string)$v : '';
 $coverDir = static fn(int $uid): string => APP_ROOT . '/private/covers/' . $uid;
+$bookDir  = static fn(int $uid): string => APP_ROOT . '/private/books/' . $uid;
+$maxBook  = (int)cfg('max_book_mb', 90) * 1048576;
+$quota    = (int)cfg('quota_mb', 600) * 1048576;
 
 /* ---- ping: la app lo usa para saber si hay servidor ---- */
 if ($a === 'ping' || $a === 'me') {
@@ -118,6 +121,48 @@ if ($a === 'cover' && $post) {
 
 if ($a === 'cover_del' && $post) {
     $id = $coverId((body())['id'] ?? ''); $f = $id ? $coverDir($uid) . '/' . $id . '.jpg' : '';
+    if ($f && is_file($f)) unlink($f);
+    out(['ok' => true]);
+}
+
+/* ---- libros digitales (EPUB/PDF) ---- */
+if ($a === 'files' && !$post) {
+    $out = [];
+    foreach (glob($bookDir($uid) . '/*.bin') ?: [] as $f) $out[] = ['id' => basename($f, '.bin'), 'size' => filesize($f)];
+    out(['ok' => true, 'files' => $out]);
+}
+
+if ($a === 'file' && !$post) {
+    $id = $coverId($_GET['id'] ?? ''); $f = $id ? $bookDir($uid) . '/' . $id . '.bin' : '';
+    if (!$f || !is_file($f)) out(['ok' => false, 'msg' => 'No existe.'], 404);
+    header('Content-Type: application/octet-stream'); header('Content-Length: ' . filesize($f));
+    header('Cache-Control: private, max-age=86400'); header('X-Content-Type-Options: nosniff');
+    readfile($f); exit;
+}
+
+if ($a === 'file' && $post) {
+    $id = $coverId($_GET['id'] ?? '');
+    if (!$id) out(['ok' => false, 'msg' => 'Libro no válido.'], 422);
+    $dir = $bookDir($uid); if (!is_dir($dir)) mkdir($dir, 0755, true);
+    $dest = $dir . '/' . $id . '.bin'; $tmp = $dest . '.part';
+    $in = fopen('php://input', 'rb'); $o = fopen($tmp, 'wb'); $n = 0;
+    while (!feof($in)) {
+        $chunk = fread($in, 1048576); if ($chunk === false) break;
+        $n += strlen($chunk);
+        if ($n > $maxBook) { fclose($in); fclose($o); unlink($tmp); out(['ok' => false, 'msg' => 'Ese libro pesa demasiado (máx. ' . (int)($maxBook / 1048576) . ' MB).'], 413); }
+        fwrite($o, $chunk);
+    }
+    fclose($in); fclose($o);
+    $head = (string)file_get_contents($tmp, false, null, 0, 5);
+    if ($n < 100 || !(strncmp($head, '%PDF', 4) === 0 || strncmp($head, 'PK', 2) === 0)) { unlink($tmp); out(['ok' => false, 'msg' => 'Solo se aceptan archivos EPUB o PDF.'], 422); }
+    $used = 0; foreach (glob($dir . '/*.bin') ?: [] as $f) if ($f !== $dest) $used += filesize($f);
+    if ($used + $n > $quota) { unlink($tmp); out(['ok' => false, 'msg' => 'Llegaste al límite de espacio de tu biblioteca digital.'], 413); }
+    rename($tmp, $dest);
+    out(['ok' => true]);
+}
+
+if ($a === 'file_del' && $post) {
+    $id = $coverId((body())['id'] ?? ''); $f = $id ? $bookDir($uid) . '/' . $id . '.bin' : '';
     if ($f && is_file($f)) unlink($f);
     out(['ok' => true]);
 }

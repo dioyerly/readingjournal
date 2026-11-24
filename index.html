@@ -63,6 +63,7 @@ input,select,textarea{font:inherit;color:var(--ink)}
 .nav button:hover{color:var(--navh);background:var(--soft)}
 .nav button.on{background:linear-gradient(var(--acc1),var(--acc2));color:var(--accink);box-shadow:0 2px 8px rgba(0,0,0,.18)}
 .hsel{background:var(--field);color:var(--fieldt);border:1px solid var(--fieldb);border-radius:99px;padding:7px 12px;font:600 13px var(--sans);flex:none}
+ @media(min-width:761px) and (max-width:1560px){.nav button{padding:8px 8px;font-size:12px}.top-in{gap:10px;padding:10px 14px}.brand small{display:none}.themebtn .tl{display:none}}
 .themebtn{flex:none;padding:7px 12px;border-radius:99px;border:1px solid var(--fieldb);background:var(--field);color:var(--fieldt);font:600 12.5px var(--sans)}
 
 main{max-width:1360px;margin:0 auto;padding:26px 22px 90px}
@@ -703,7 +704,7 @@ function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){toast('
 const RETO_BASE=['Un libro de menos de 200 páginas','Un clásico','Un libro que te recomendó alguien','Una autora latinoamericana','Un libro con portada azul','El primer tomo de una saga',
  'Un libro de no ficción','Un libro que te haga llorar','Un libro publicado este año','Un audiolibro','Uno que tenías hace mucho por leer','Una relectura'];
 const newBook=o=>Object.assign({id:uid(),title:'',author:'',genre:'Romance',format:'Papel',pages:0,status:'Por leer',start:'',end:'',rating:0,fav:false,quotes:[],notes:'',page:0,color:'',
-  tropes:[],spice:0,moods:[],series:'',seriesN:'',boyfriend:'',cw:'',reread:false},o||{});
+  tropes:[],spice:0,moods:[],series:'',seriesN:'',boyfriend:'',cw:'',reread:false,secs:0,dig:null},o||{});
 function baseSettings(){return {name:'Lectora',theme:'lila',lang:'',goalBooks:24,goalPages:8000,goals:{},ignoreArticles:true,customTropes:[],notif:false,
   genres:['Romance','Fantasía','Thriller','Ficción','No ficción','Autoayuda','Clásico','Juvenil'],year:new Date().getFullYear()}}
 
@@ -763,7 +764,7 @@ function seed(){
         U('Bajo cero','Lucas Ferro','2027-10-30','',0,['Plot twist'])]};
 }
 function emptyState(keep){const s=baseSettings();if(keep){s.name=keep.name;s.theme=keep.theme;s.lang=keep.lang}
-  return {v:2,demo:false,settings:s,books:[],log:{},retos:{},wish:[],up:[]}}
+  return {v:2,demo:false,settings:s,books:[],log:{},logSecs:{},retos:{},wish:[],up:[]}}
 
 /* ================= temas ================= */
 const TH={
@@ -976,12 +977,13 @@ function radar(v){
 }
 
 /* ================= navegación ================= */
-const VIEWS=[['home','🏠 Inicio'],['lib','📚 Biblioteca'],['quiz','✨ ¿Qué leo?'],['adn','🧬 Mi ADN lector'],['next','📅 Lo que viene'],['reto','🏆 Reto'],['wish','🛍 Wishlist'],['quotes','💬 Citas'],['set','⚙️ Ajustes']];
+const VIEWS=[['home','🏠 Inicio'],['lib','📚 Biblioteca'],['read','📖 Mi lector'],['quiz','✨ ¿Qué leo?'],['adn','🧬 Mi ADN lector'],['next','📅 Lo que viene'],['reto','🏆 Reto'],['wish','🛍 Wishlist'],['quotes','💬 Citas'],['set','⚙️ Ajustes']];
 let view='home',lib={filter:'Todos',sort:'titulo',mode:'lomos',q:'',trope:'',spice:''};
 let Q={i:0,ans:{tropes:[]},res:false};
 function renderNav(){
   $('#nav').innerHTML=VIEWS.map(v=>`<button data-act="nav" data-v="${v[0]}" class="${view===v[0]?'on':''}">${v[1]}</button>`).join('');
   const ys=new Set([new Date().getFullYear(),2027,Y()]);S.books.forEach(b=>{if(b.end)ys.add(+b.end.slice(0,4))});
+  {const on=$('#nav .on');if(on&&on.scrollIntoView)on.scrollIntoView({inline:'center',block:'nearest'})}
   $('#yearsel').innerHTML=[...ys].sort((a,b)=>b-a).map(y=>`<option ${y===Y()?'selected':''}>${y}</option>`).join('');
   $('#themebtn').innerHTML=theme()==='lila'?'🕯️<span class="tl"> Clásica</span>':'💜<span class="tl"> Lila</span>';
   $('#langbtn').innerHTML=LANG==='es'?'🌐 EN':'🌐 ES';
@@ -996,11 +998,28 @@ function render(){
   document.documentElement.dataset.theme=theme();
   renderNav();
   const demo=S.demo?`<div class="demo">📖 Estás viendo una biblioteca de ejemplo (autoras y libros inventados) para que veas todo lo que hace. <button data-act="clearDemo">Borrar ejemplos y empezar la mía</button></div>`:'';
-  const v={home:vHome,lib:vLib,quiz:vQuiz,adn:vAdn,next:vNext,reto:vReto,wish:vWish,quotes:vQuotes,set:vSet}[view];
+  const v={home:vHome,lib:vLib,quiz:vQuiz,adn:vAdn,next:vNext,reto:vReto,wish:vWish,quotes:vQuotes,set:vSet,read:vRead}[view];
   $('#app').innerHTML=demo+(view==='home'||view==='next'?alertHtml():'')+v();
   if(view==='lib')drawShelves();
+  if(view==='read'&&window.MBR)MBR.wire();
 }
 function go(v){view=v;render();window.scrollTo({top:0})}
+
+/* ================= MI LECTOR (EPUB / PDF) ================= */
+let rdLoading=null;
+function loadReader(){
+  if(window.MBR)return Promise.resolve();
+  if(rdLoading)return rdLoading;
+  rdLoading=new Promise((ok,ko)=>{
+    const l=document.createElement('link');l.rel='stylesheet';l.href='reader/reader.css';document.head.appendChild(l);
+    const sc=document.createElement('script');sc.src='reader/reader.js';sc.onload=ok;sc.onerror=()=>{rdLoading=null;ko()};document.head.appendChild(sc)});
+  return rdLoading;
+}
+function vRead(){
+  if(window.MBR)return MBR.view();
+  loadReader().then(()=>{if(view==='read')render()}).catch(()=>toast('No se pudo abrir el lector. ¿Tenés internet?'));
+  return `<h1 class="pt">Mi lector</h1><p class="sub">Preparando tu lector…</p>`;
+}
 
 /* ================= INICIO ================= */
 function vHome(){
@@ -1011,7 +1030,7 @@ function vHome(){
   const msg=!s.me?`El ${Y()} todavía no empezó: ya podés ir armando tus metas y tus lanzamientos.`:s.f.length>=G.books?'🎉 ¡Cumpliste tu meta del año!':s.f.length>=s.exp?`✔ Vas al día: ${s.f.length} de ${s.exp} libros esperados a esta altura.`:`Vas ${s.exp-s.f.length} libro(s) atrás: ¡todavía llegás!`;
   const reading=s.reading.length?s.reading.map(b=>{const p=b.pages?Math.min(100,Math.round((b.page||0)/b.pages*100)):0;
     return `<div class="reading">${thumb(b,64,96)}<div style="flex:1;min-width:0"><h4>${esc(b.title)}</h4><p>${esc(b.author)} · ${b.page||0} de ${b.pages||'?'} páginas · ${p}%</p><div class="bar"><i style="width:${p}%"></i></div>
-     <div class="logrow"><input type="number" min="1" placeholder="págs. de hoy" id="lp-${b.id}"><button class="mini" data-act="logPages" data-id="${b.id}">+ Registrar</button><button class="mini o" data-act="finish" data-id="${b.id}">¡Lo terminé!</button></div></div></div>`}).join('')
+     <div class="logrow"><input type="number" min="1" placeholder="págs. de hoy" id="lp-${b.id}"><button class="mini" data-act="logPages" data-id="${b.id}">+ Registrar</button>${b.dig?`<button class="mini" data-act="rdRead" data-id="${b.id}">📖 Leer</button>`:''}<button class="mini o" data-act="finish" data-id="${b.id}">¡Lo terminé!</button></div></div></div>`}).join('')
     :`<div class="empty">No tenés ningún libro en curso. <a href="#" data-act="nav" data-v="quiz">Hacé el test ✨</a> y te digo cuál empezar.</div>`;
   const nextUp=S.up.filter(u=>u.date>today()).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,3);
   return `<h1 class="pt">Hola, <em>${esc(S.settings.name)}</em></h1><p class="sub">Tu diario de lecturas ${Y()}</p>
@@ -1437,6 +1456,7 @@ function drawModal(){
   $('#modal').innerHTML=`<div class="ov" id="ov"><form class="dlg" id="bookForm" autocomplete="off"><button type="button" class="x" data-act="close" aria-label="Cerrar">✕</button>
   <h2>${M.isNew?'Agregar libro':'Ficha del libro'}</h2>
   <div><div class="stage" id="stage">${prev}<div class="btnrow"><button type="button" class="mini" data-act="pickCover">📷 Subir portada</button><button type="button" class="mini" data-act="takePhoto">📱 Sacar foto</button>${hasPhoto?'<button type="button" class="mini" data-act="removeCover">Quitar foto</button>':''}</div>
+   ${M.isNew?'':(b.dig?`<div class="btnrow" style="margin-top:8px"><button type="button" class="mini" data-act="rdRead" data-id="${b.id}">📖 Leer ahora</button>${b.secs?`<span class="mini" style="background:none;color:inherit;cursor:default">⏱ ${Math.floor(b.secs/3600)?Math.floor(b.secs/3600)+' h ':''}${Math.floor(b.secs%3600/60)} min</span>`:''}</div>`:`<div class="btnrow" style="margin-top:8px"><button type="button" class="mini" data-act="rdAttach" data-id="${b.id}">📖 Subir EPUB o PDF para leerlo acá</button></div>`)}
    <small>Arrastrá para girar el libro · Soltá una foto acá para ponerle la portada</small></div></div>
   <div><div class="mtabs">${[['a','📖 Datos'],['b','💘 Lo que sentí'],['c','✍️ Citas y notas']].map(t=>`<button type="button" data-act="mtab" data-t="${t[0]}" class="${M.tab===t[0]?'on':''}">${t[1]}</button>`).join('')}</div>
   <div class="msec ${M.tab==='a'?'on':''}" data-s="a">
@@ -1501,6 +1521,7 @@ let tt;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on
 function download(name,text,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1500)}
 const upById=id=>S.up.find(u=>u.id===id);
 const A={
+  rdRead(el){loadReader().then(()=>MBR.read(el.dataset.id))},rdPick(el,e){if(e&&e.target.closest('button')&&el.tagName!=='BUTTON')return;loadReader().then(()=>MBR.pick())},rdAttach(el){loadReader().then(()=>MBR.pick(el.dataset.id))},rdDetach(el){MBR.detach(el.dataset.id)},
   syncNow(){SY.push(true)},syncOut(){SY.out()},syncIn(){SY.auth('login')},syncReg(){SY.auth('register')},
   nav(el){go(el.dataset.v)},open(el){openBook(el.dataset.id)},new(){openBook(null)},close(){closeModal()},
   toggleLang(){S.settings.lang=LANG==='es'?'en':'es';save();setLang(S.settings.lang);coverCache&&Object.keys(coverCache).forEach(k=>delete coverCache[k]);render()},
@@ -1522,7 +1543,7 @@ const A={
     const real=(allTropes().find(t=>t[0].toLowerCase()===v.toLowerCase())||[v])[0];if(!M.b.tropes.includes(real))M.b.tropes.push(real);save();drawModal()},
   pickCover(){$('#filePick').click()},takePhoto(){$('#fileCam').click()},
   removeCover(){readForm();M.cover=null;M.rem=true;M.b.color='';drawModal()},
-  delBook(){if(!confirm('¿Eliminar "'+M.b.title+'"? No se puede deshacer.'))return;const id=M.b.id;S.books=S.books.filter(b=>b.id!==id);delete covers[id];IDB.del(id);
+  delBook(){if(!confirm('¿Eliminar "'+M.b.title+'"? No se puede deshacer.'))return;const id=M.b.id;if(window.MBR)MBR.deleteFile(id);S.books=S.books.filter(b=>b.id!==id);delete covers[id];IDB.del(id);
     Object.values(S.retos||{}).forEach(R=>R.forEach(c=>{if(c.bookId===id){c.bookId='';c.done=false}}));save();closeModal();render();toast('Libro eliminado')},
   /* inicio */
   logPages(el){const b=S.books.find(x=>x.id===el.dataset.id),n=Math.floor(+$('#lp-'+b.id).value);if(!n||n<1){toast('Escribí cuántas páginas leíste hoy');return}
@@ -1637,7 +1658,7 @@ const UI={
 };
 const _x=o=>Object.keys(o).sort((a,b)=>b.length-a.length);
 const INL=Object.assign({},TRO,MOO,SPI);const INLK=_x(INL);
-const SYN={'Cuenta':'Account','Tu cuenta':'Your account','El servidor todavía no está listo. Tu biblioteca sigue guardándose en este dispositivo.':'The server isn\'t ready yet. Your library keeps saving on this device.','Hay cambios por subir…':'Changes waiting to upload…','Todo guardado en la nube':'Everything saved to the cloud','Última sincronización:':'Last sync:','Sincronizar ahora':'Sync now','Cerrar sesión':'Sign out','Creá tu cuenta para tener tu biblioteca en el celular, la tablet y la computadora, siempre al día.':'Create your account to have your library on your phone, tablet and computer, always up to date.','Correo':'Email','Contraseña (mínimo 8)':'Password (min. 8 characters)','Tu nombre (solo al crear la cuenta)':'Your name (only when creating the account)','Entrar':'Sign in','Crear cuenta':'Create account','Sin cuenta, todo sigue guardándose solo en este dispositivo.':'Without an account, everything stays saved on this device only.','Sin conexión':'No connection','Correo o contraseña incorrectos.':'Wrong email or password.','Escribí un correo válido.':'Enter a valid email.','La contraseña debe tener al menos 8 caracteres.':'The password must be at least 8 characters.','Ese correo ya tiene una cuenta. Probá entrar.':'That email already has an account. Try signing in.','Demasiados intentos. Esperá unos minutos y probá de nuevo.':'Too many attempts. Wait a few minutes and try again.'};
+const SYN={'Mi lector':'My reader','Preparando tu lector…':'Getting your reader ready…','Leer':'Read','Leyendo':'Reading','Cuenta':'Account','Tu cuenta':'Your account','El servidor todavía no está listo. Tu biblioteca sigue guardándose en este dispositivo.':'The server isn\'t ready yet. Your library keeps saving on this device.','Hay cambios por subir…':'Changes waiting to upload…','Todo guardado en la nube':'Everything saved to the cloud','Última sincronización:':'Last sync:','Sincronizar ahora':'Sync now','Cerrar sesión':'Sign out','Creá tu cuenta para tener tu biblioteca en el celular, la tablet y la computadora, siempre al día.':'Create your account to have your library on your phone, tablet and computer, always up to date.','Correo':'Email','Contraseña (mínimo 8)':'Password (min. 8 characters)','Tu nombre (solo al crear la cuenta)':'Your name (only when creating the account)','Entrar':'Sign in','Crear cuenta':'Create account','Sin cuenta, todo sigue guardándose solo en este dispositivo.':'Without an account, everything stays saved on this device only.','Sin conexión':'No connection','Correo o contraseña incorrectos.':'Wrong email or password.','Escribí un correo válido.':'Enter a valid email.','La contraseña debe tener al menos 8 caracteres.':'The password must be at least 8 characters.','Ese correo ya tiene una cuenta. Probá entrar.':'That email already has an account. Try signing in.','Demasiados intentos. Esperá unos minutos y probá de nuevo.':'Too many attempts. Wait a few minutes and try again.'};
 const DICT=Object.assign({},UI,TRO,MOO,SPI,STA,TIT,SYN);
 const DL={};Object.keys(DICT).forEach(k=>DL[k.toLowerCase()]=DICT[k]);
 const MES={es:['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'],en:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']};
@@ -1730,13 +1751,14 @@ function trEl(e){
     if(LANG==='en'){if(rec&&rec.en===v)return;const en=trStr(v);if(en!==v){const o=ORA.get(e)||{};o[a]={es:v,en};ORA.set(e,o);e.setAttribute(a,en);if(a==='value'&&'value' in e)e.value=en}}
     else if(rec&&rec.en===v){e.setAttribute(a,rec.es);if(a==='value'&&'value' in e)e.value=rec.es}});
 }
+const inNo=n=>{const e=n.nodeType===3?n.parentNode:n;return !!(e&&e.closest&&e.closest('.notr'))};
 function trNode(root){
-  if(!root)return;
+  if(!root||inNo(root))return;
   if(root.nodeType===3){if(!(root.parentNode&&/^(TEXTAREA|SCRIPT|STYLE)$/.test(root.parentNode.nodeName)))trText(root);return}
   if(root.nodeType!==1)return;
   if(/^(SCRIPT|STYLE|TEXTAREA)$/.test(root.nodeName))return;
   trEl(root);
-  const w=document.createTreeWalker(root,NodeFilter.SHOW_ELEMENT|NodeFilter.SHOW_TEXT);let n;
+  const w=document.createTreeWalker(root,NodeFilter.SHOW_ELEMENT|NodeFilter.SHOW_TEXT,{acceptNode:n=>n.nodeType===1&&n.classList&&n.classList.contains('notr')?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT});let n;
   while((n=w.nextNode())){if(n.nodeType===3){if(!/^(TEXTAREA|SCRIPT|STYLE)$/.test(n.parentNode.nodeName))trText(n)}else if(!/^(SCRIPT|STYLE)$/.test(n.nodeName))trEl(n)}
 }
 let MO=null;
@@ -1746,6 +1768,7 @@ function setLang(l){
   LANG=l==='en'?'en':'es';document.documentElement.lang=LANG;MONTHS=MES[LANG];
   if(MO)MO.disconnect();trNode(document.body);obsStart();
   document.title=LANG==='en'?'My Library · Reading Journal':'Mi Biblioteca · Reading Journal';
+  if(window.MBR&&MBR.isOpen())MBR.refresh();
 }
 
 /* ================= cuenta y sincronización (opcional; sin servidor la app sigue funcionando local) ================= */
@@ -1839,7 +1862,7 @@ const SY={on:false,db:false,reg:true,user:null,ver:0,dirty:false,busy:false,msg:
 /* ================= inicio de la app ================= */
 function migrate(d){
   d.settings=Object.assign(baseSettings(),d.settings||{});d.books=(d.books||[]).map(b=>Object.assign(newBook(),b));
-  d.up=d.up||[];d.wish=d.wish||[];d.log=d.log||{};
+  d.up=d.up||[];d.wish=d.wish||[];d.log=d.log||{};d.logSecs=d.logSecs||{};
   if(!d.retos){d.retos={};if(d.challenges)d.retos[d.settings.year]=d.challenges;delete d.challenges}
   return d;
 }
@@ -1848,6 +1871,8 @@ function notifyReleased(){
   if(typeof Notification!=='undefined'&&Notification.permission==='granted')list.forEach(u=>{try{new Notification(LANG==='en'?'📚 Out now!':'📚 ¡Ya salió!',{body:LANG==='en'?TX(u.title)+' by '+u.author:u.title+' de '+u.author})}catch(e){}});
   list.forEach(u=>u.notified=true);save();
 }
+window.MB={get S(){return S},get covers(){return covers},save,toast,esc,uid,today,addDays,newBook,coverOf,IDB,SY,processImage,render,openBook,
+  modalTab(t){M.tab=t;drawModal()},lang:()=>LANG,theme:()=>theme()};
 (async function init(){
   await IDB.open();covers=await IDB.all();
   try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){S=null}

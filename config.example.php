@@ -19,4 +19,6 @@ return [
     // Límites (en KB) para cuidar el espacio del hosting
     'max_state_kb' => 4096,   // biblioteca completa de una usuaria (texto)
     'max_cover_kb' => 700,    // cada foto de portada
+    'max_book_mb'  => 90,     // cada libro digital (EPUB/PDF)
+    'quota_mb'     => 600,    // espacio total de libros por usuaria
 ];
