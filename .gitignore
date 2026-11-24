@@ -1,0 +1,9 @@
+# Secretos y datos de usuarias: quedan solo en el hosting
+/config.php
+private/covers/*
+!private/covers/.gitkeep
+private/books/*
+!private/books/.gitkeep
+data/*
+!data/.gitkeep
+.DS_Store
