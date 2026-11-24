@@ -694,6 +694,14 @@ html[data-theme] .scene.img::before{display:none}
   .logrow{gap:6px}.logrow .mini{padding:9px 10px;flex:1 1 auto}
   .card{border-radius:16px}
 }
+
+.nav button{display:inline-flex;align-items:center;gap:6px}
+.nav .ni{width:16px;height:16px;flex:none;opacity:.8}.nav button.on .ni{opacity:1}
+.moodbtns button{display:inline-flex;align-items:center;gap:8px}
+.moodbtns .mi{width:17px;height:17px;flex:none;color:var(--c1)}
+.moodbtns button:hover .mi{transform:rotate(-8deg) scale(1.1)}.moodbtns .mi{transition:transform .2s}
+.card>h3:first-child{display:flex;align-items:center;gap:9px}
+.card>h3:first-child::before{content:"";width:7px;height:7px;transform:rotate(45deg);background:linear-gradient(135deg,var(--acc1),var(--acc2));border-radius:2px;flex:none}
 </style>
 </head>
 <body>
@@ -1068,11 +1076,24 @@ function radar(v){
 }
 
 /* ================= navegación ================= */
+const IC={
+home:'<path d="M4 11l8-6.5 8 6.5"/><path d="M6 10v9h12v-9"/><path d="M10.5 19v-5h3v5"/>',
+lib:'<path d="M5 4v16"/><path d="M9 6v14"/><path d="M13 4.5l3.2 15.5"/><path d="M18 5h2.5v15H18z"/>',
+read:'<path d="M12 6c-2-1.5-4.5-2-8-2v13c3.5 0 6 .5 8 2 2-1.5 4.5-2 8-2V4c-3.5 0-6 .5-8 2z"/><path d="M12 6v13"/>',
+quiz:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M18.5 16.5l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/>',
+adn:'<path d="M7 3c0 6 10 6 10 12s-10 6-10 6"/><path d="M17 3c0 6-10 6-10 12"/><path d="M8.5 7.5h7M8.5 16.5h7"/>',
+next:'<rect x="4" y="5.5" width="16" height="14" rx="2.5"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/>',
+reto:'<path d="M8 4h8v5a4 4 0 01-8 0z"/><path d="M8 6H5.5a2 2 0 002.5 3M16 6h2.5a2 2 0 01-2.5 3"/><path d="M12 13v4M8.5 20h7M10 17h4"/>',
+wish:'<path d="M12 20s-7-4.5-7-10a4 4 0 017-2.5A4 4 0 0119 10c0 5.5-7 10-7 10z"/>',
+quotes:'<path d="M5 18v-5.5C5 9 7 7 9.5 6.5M5 12.5h4v5.5H5z"/><path d="M14 18v-5.5c0-3.5 2-5.5 4.5-6M14 12.5h4v5.5h-4z"/>',
+set:'<circle cx="12" cy="12" r="3"/><path d="M12 3.5v2.3M12 18.2v2.3M3.5 12h2.3M18.2 12h2.3M6 6l1.6 1.6M16.4 16.4L18 18M18 6l-1.6 1.6M7.6 16.4L6 18"/>'};
+const MIC={'Enamorarme':'<path d="M12 20s-7-4.5-7-10a4 4 0 017-2.5A4 4 0 0119 10c0 5.5-7 10-7 10z"/>','Llorar':'<path d="M12 3.5s5.5 6 5.5 10a5.5 5.5 0 01-11 0c0-4 5.5-10 5.5-10z"/>','Adrenalina':'<path d="M13 3L5 13.5h6L10 21l8-10.5h-6z"/>','Oscuro':'<path d="M19 14.5A7.5 7.5 0 019.5 5 7.5 7.5 0 1019 14.5z"/>','Reírme':'<circle cx="12" cy="12" r="8"/><path d="M8.5 13.5c1 2 2.2 2.8 3.5 2.8s2.5-.8 3.5-2.8M9 9.5h.01M15 9.5h.01"/>','Otro mundo':'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/>','Comfort':'<path d="M5 9h11v5a4 4 0 01-4 4H9a4 4 0 01-4-4z"/><path d="M16 10h1.5a2 2 0 010 4H16M8 3.5v2M12 3.5v2"/>','Aprender':'<path d="M12 6c-2-1.5-4.5-2-8-2v13c3.5 0 6 .5 8 2 2-1.5 4.5-2 8-2V4c-3.5 0-6 .5-8 2z"/><path d="M12 6v13"/>'};
+const svgI=(d,c='ni')=>`<svg class="${c}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
 const VIEWS=[['home','🏠 Inicio'],['lib','📚 Biblioteca'],['read','📖 Mi lector'],['quiz','✨ ¿Qué leo?'],['adn','🧬 Mi ADN lector'],['next','📅 Lo que viene'],['reto','🏆 Reto'],['wish','🛍 Wishlist'],['quotes','💬 Citas'],['set','⚙️ Ajustes']];
 let view='home',lib={page:0,filter:'Todos',sort:'titulo',mode:'lomos',q:'',trope:'',spice:''};
 let Q={i:0,ans:{tropes:[]},res:false};
 function renderNav(){
-  $('#nav').innerHTML=VIEWS.map(v=>`<button data-act="nav" data-v="${v[0]}" class="${view===v[0]?'on':''}">${v[1]}</button>`).join('');
+  $('#nav').innerHTML=VIEWS.map(v=>`<button data-act="nav" data-v="${v[0]}" class="${view===v[0]?'on':''}">${svgI(IC[v[0]]||'')}<span>${v[1].replace(/^\S+\s+/,'')}</span></button>`).join('');
   const ys=new Set([new Date().getFullYear(),2027,Y()]);S.books.forEach(b=>{if(b.end)ys.add(+b.end.slice(0,4))});
   {const nv=$('#nav'),on=$('#nav .on');if(nv&&on)nv.scrollLeft+=(on.getBoundingClientRect().left-nv.getBoundingClientRect().left)-(nv.clientWidth-on.offsetWidth)/2}
   $('#yearsel').innerHTML=[...ys].sort((a,b)=>b-a).map(y=>`<option ${y===Y()?'selected':''}>${y}</option>`).join('');
@@ -1083,7 +1104,7 @@ function renderNav(){
 const released=()=>S.up.filter(u=>u.date<=today()&&!u.seen);
 function alertHtml(){
   return released().map(u=>`<div class="alert"><span class="big">🎉</span><div><small style="opacity:.85">¡Ya salió! · ${fmt(u.date)}</small><br><b>${esc(u.title)}</b> <span style="opacity:.9">de ${esc(u.author)}</span></div>
-   <div class="ab"><button data-act="upToPile" data-id="${u.id}">📚 A mi pila</button><button data-act="upToWish" data-id="${u.id}">🛍 A la wishlist</button><button data-act="upSeen" data-id="${u.id}">Listo ✓</button></div></div>`).join('');
+   <div class="ab"><button data-act="upToPile" data-id="${u.id}">A mi pila</button><button data-act="upToWish" data-id="${u.id}">A la wishlist</button><button data-act="upSeen" data-id="${u.id}">Listo ✓</button></div></div>`).join('');
 }
 function render(){
   document.documentElement.dataset.theme=theme();
@@ -1096,7 +1117,7 @@ function render(){
 }
 function topBanner(){
   const en=LANG==='en';
-  if(DEMO)return `<div class="demo bwdemo notr"><span>✨ <b>${en?'You\'re in the Bookwat demo.':'Estás en la demo de Bookwat.'}</b> ${S.demo?(en?'These books and authors are made up so you can see everything it does. Try it freely: nothing is sent anywhere.':'Los libros y autoras son inventados para que veas todo lo que hace. Probala tranquila: no se envía nada a ningún lado.'):(en?'Your demo library starts from zero. Everything stays in this browser only.':'Tu biblioteca de prueba arranca desde cero. Todo queda solo en este navegador.')}</span>
+  if(DEMO)return `<div class="demo bwdemo notr"><span><b>${en?'You\'re in the Bookwat demo.':'Estás en la demo de Bookwat.'}</b> ${S.demo?(en?'These books and authors are made up so you can see everything it does. Try it freely: nothing is sent anywhere.':'Los libros y autoras son inventados para que veas todo lo que hace. Probala tranquila: no se envía nada a ningún lado.'):(en?'Your demo library starts from zero. Everything stays in this browser only.':'Tu biblioteca de prueba arranca desde cero. Todo queda solo en este navegador.')}</span>
    <span class="bwbtns">${S.demo?`<button data-act="clearDemo">${en?'Delete everything and start from zero':'Borrar todo y empezar de cero'}</button>`:`<button data-act="reseed">${en?'Load the examples again':'Volver a cargar los ejemplos'}</button>`}<a class="bwsub" href="index.html#precio">${en?'Try 1 month free':'Probá 1 mes gratis'} →</a></span></div>`;
   const u=SY.user;if(!u)return '';
   if(u.acceso==='solo_lectura')return `<div class="demo bwwarn notr"><span>🔒 <b>${en?'Your membership isn\'t active.':'Tu suscripción no está activa.'}</b> ${en?'You can still see and download your library, but new changes won\'t be saved.':'Podés ver y descargar tu biblioteca, pero los cambios nuevos no se guardan.'}</span><span class="bwbtns">${u.renovar_mp&&!/TU_PLAN/.test(u.renovar_mp)?`<a class="bwsub" href="${esc(u.renovar_mp)}">Mercado Pago</a>`:''}${u.renovar_pp&&!/TU_PLAN/.test(u.renovar_pp)?`<a class="bwsub" href="${esc(u.renovar_pp)}">PayPal</a>`:''}</span></div>`;
@@ -1111,8 +1132,8 @@ function loadReader(){
   if(window.MBR)return Promise.resolve();
   if(rdLoading)return rdLoading;
   rdLoading=new Promise((ok,ko)=>{
-    const l=document.createElement('link');l.rel='stylesheet';l.href='reader/reader.css?v=20261124g';document.head.appendChild(l);
-    const sc=document.createElement('script');sc.src='reader/reader.js?v=20261124g';sc.onload=ok;sc.onerror=()=>{rdLoading=null;ko()};document.head.appendChild(sc)});
+    const l=document.createElement('link');l.rel='stylesheet';l.href='reader/reader.css?v=20261124i';document.head.appendChild(l);
+    const sc=document.createElement('script');sc.src='reader/reader.js?v=20261124i';sc.onload=ok;sc.onerror=()=>{rdLoading=null;ko()};document.head.appendChild(sc)});
   return rdLoading;
 }
 function vRead(){
@@ -1135,26 +1156,26 @@ function vHome(){
   const nextUp=S.up.filter(u=>u.date>today()).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,3);
   return `<h1 class="pt">Hola, <em>${esc(S.settings.name)}</em></h1><p class="sub">Tu diario de lecturas ${Y()}</p>
   <div class="grid g4 mt">
-   <div class="card kpi"><div class="l">📖 Libros leídos</div><div class="n">${s.f.length}</div><div class="s">de una meta de ${G.books} libros</div><div class="bar"><i style="width:${pB*100}%"></i></div></div>
-   <div class="card kpi k2"><div class="l">📄 Páginas leídas</div><div class="n">${nf(s.pages)}</div><div class="s">meta: ${nf(G.pages)} (${Math.round(pP*100)}%)</div><div class="bar"><i style="width:${pP*100}%"></i></div></div>
-   <div class="card kpi k3"><div class="l">⭐ Puntaje promedio</div><div class="n">${s.avg?s.avg.toFixed(1):'–'}</div><div class="s"><span class="stars">${starsTxt(Math.round(s.avg))}</span> · ${s.favs} favoritos</div></div>
+   <div class="card kpi"><div class="l">Libros leídos</div><div class="n">${s.f.length}</div><div class="s">de una meta de ${G.books} libros</div><div class="bar"><i style="width:${pB*100}%"></i></div></div>
+   <div class="card kpi k2"><div class="l">Páginas leídas</div><div class="n">${nf(s.pages)}</div><div class="s">meta: ${nf(G.pages)} (${Math.round(pP*100)}%)</div><div class="bar"><i style="width:${pP*100}%"></i></div></div>
+   <div class="card kpi k3"><div class="l">Puntaje promedio</div><div class="n">${s.avg?s.avg.toFixed(1):'–'}</div><div class="s"><span class="stars">${starsTxt(Math.round(s.avg))}</span> · ${s.favs} favoritos</div></div>
    <div class="card kpi k4"><div class="l">🔥 Racha de lectura</div><div class="n">${streak()}</div><div class="s">días seguidos leyendo</div></div></div>
   <div class="grid g2 mt" style="grid-template-columns:1.25fr 1fr">
-   <div class="card"><h3>📕 Leyendo ahora</h3>${reading}</div>
-   <div class="card"><h3>✨ ¿Qué leo hoy? Elegí tu mood</h3><div class="moodbtns">${MOODS.map(([m,e])=>`<button data-act="quickMood" data-v="${m}">${e} ${m}</button>`).join('')}</div>
+   <div class="card"><h3>Leyendo ahora</h3>${reading}</div>
+   <div class="card"><h3>¿Qué leo hoy? Elegí tu mood</h3><div class="moodbtns">${MOODS.map(([m,e])=>`<button data-act="quickMood" data-v="${m}">${svgI(MIC[m]||'','mi')}<span>${m}</span></button>`).join('')}</div>
     <div style="margin-top:18px;padding-top:14px;border-top:1px dashed var(--dash)"><div class="arche" data-act="nav" data-v="adn"><span class="e">${ar.a[0]}</span><div><small>Tu ADN lector dice que sos</small><b>${ar.a[1]}</b><small>Ver tu perfil completo →</small></div></div></div></div></div>
   <div class="grid g2 mt">
    <div class="card"><h3>Tus metas ${Y()}</h3><div style="display:flex;justify-content:space-around;gap:10px;flex-wrap:wrap">${ring(pB,'Libros',s.f.length+' / '+G.books)}${ring(pP,'Páginas',nf(s.pages)+' / '+nf(G.pages))}</div>
     <div class="msg ${s.me&&s.f.length<s.exp&&s.f.length<G.books?'warn':''}" style="margin-top:14px">${msg}</div>
     <div class="grid" style="grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px;text-align:center">${[[s.avgDays?s.avgDays.toFixed(1):'–','días por libro'],[s.proj,'proyección del año'],[s.tbr.length,'en tu pila']].map(x=>`<div><div style="font:700 28px var(--serif);color:var(--c1)">${x[0]}</div><div style="font-size:11px;color:var(--ink2)">${x[1]}</div></div>`).join('')}</div></div>
-   <div class="card"><h3>📅 Lo que viene</h3>${nextUp.length?nextUp.map(u=>`<div class="last" data-act="nav" data-v="next"><div class="th" style="background-image:url('${genCover(u)}')"></div><div><b>${esc(u.title)}</b><small>${esc(u.author)}${u.series?' · '+esc(u.series)+' #'+u.seriesN:''}</small></div><div class="r"><b style="font:700 24px var(--serif);color:var(--c1);display:inline">${daysTo(u.date)}</b> días<br>${fmt(u.date)}</div></div>`).join(''):'<div class="empty">No anotaste lanzamientos todavía.</div>'}
+   <div class="card"><h3>Lo que viene</h3>${nextUp.length?nextUp.map(u=>`<div class="last" data-act="nav" data-v="next"><div class="th" style="background-image:url('${genCover(u)}')"></div><div><b>${esc(u.title)}</b><small>${esc(u.author)}${u.series?' · '+esc(u.series)+' #'+u.seriesN:''}</small></div><div class="r"><b style="font:700 24px var(--serif);color:var(--c1);display:inline">${daysTo(u.date)}</b> días<br>${fmt(u.date)}</div></div>`).join(''):'<div class="empty">No anotaste lanzamientos todavía.</div>'}
     <button class="btn dark" style="margin-top:12px" data-act="nav" data-v="next">Ver calendario de lanzamientos →</button></div></div>
   <div class="grid g2 mt"><div class="card"><h3>Libros terminados por mes</h3>${chartBars(s.months,MONTHS)}</div>
    <div class="card"><h3>Tus géneros</h3>${chartDonut(Object.entries(s.gc).sort((a,b)=>b[1]-a[1]).map(([l,v])=>({l,v})))}</div></div>
   <div class="grid g3 mt">
    <div class="card"><h3>Páginas de los últimos 7 días</h3>${chartBars(wk.map(w=>w[1]),wkL,{h:190,w:340})}<div style="font-size:12px;color:var(--ink2)">Esta semana: <b>${wk.reduce((a,w)=>a+w[1],0)}</b> páginas</div></div>
    <div class="card"><h3>Cómo puntuaste tus lecturas</h3>${hbars([5,4,3,2,1].map(n=>({l:`<span class="stars">${'★'.repeat(n)}</span>`,v:s.rc[n-1],t:s.rc[n-1]})))}</div>
-   <div class="card"><h3>💖 Lo mejor del año</h3>
+   <div class="card"><h3>Lo mejor del año</h3>
     ${s.best?`<div class="last" data-act="open" data-id="${s.best.id}" style="border:0"><div class="th" style="width:54px;height:80px;background-image:url('${coverOf(s.best)}')"></div><div><small>Libro favorito</small><b>${esc(s.best.title)}</b><small>${esc(s.best.author)}</small></div></div>`:'<div class="empty">Aún no hay libros terminados.</div>'}
     <div style="margin-top:10px;padding-top:10px;border-top:1px dashed var(--dash)"><small style="color:var(--ink2)">Autora/autor más leído</small><div style="font:700 22px var(--serif)">${s.topA?esc(s.topA[0]):'—'}</div>${s.topA?`<small style="color:var(--ink2)">${s.topA[1]} libro(s) este año</small>`:''}</div></div></div>
   <div class="card mt"><h3>Últimos libros terminados</h3>${s.last.length?s.last.map(b=>`<div class="last" data-act="open" data-id="${b.id}"><div class="th" style="background-image:url('${coverOf(b)}')"></div>
@@ -1546,7 +1567,7 @@ function vNext(){
   <div class="grid g2 mt" style="grid-template-columns:1.6fr 1fr;align-items:start">
    <div class="card"><h3>⏳ Próximos lanzamientos</h3>${timeline||'<div class="empty">No tenés lanzamientos anotados. Tocá "+ Anotar lanzamiento".</div>'}
     ${past.length?`<div class="mhd">Ya salieron</div>`+past.map(u=>`<div class="rel"><div class="th" style="width:62px;height:93px;background-image:url('${genCover(u)}');cursor:default"></div><div><h4>${esc(u.title)}</h4><p>${esc(u.author)} · salió el ${fmt(u.date)}</p>
-      <div class="acts"><button data-act="upToPile" data-id="${u.id}">📚 A mi pila</button><button data-act="upToWish" data-id="${u.id}">🛍 A la wishlist</button><button data-act="upDel" data-id="${u.id}">✕ Quitar</button></div></div><div class="cd out"><b>¡Ya salió!</b></div></div>`).join(''):''}</div>
+      <div class="acts"><button data-act="upToPile" data-id="${u.id}">A mi pila</button><button data-act="upToWish" data-id="${u.id}">A la wishlist</button><button data-act="upDel" data-id="${u.id}">✕ Quitar</button></div></div><div class="cd out"><b>¡Ya salió!</b></div></div>`).join(''):''}</div>
    <div class="card"><h3>📚 Tus sagas</h3>${sg.length?sg.map(s=>`<div class="saga"><h4>${esc(s.name)}</h4><p>${esc(s.author)} · ${s.read} de ${s.items.length} leídos${s.next?` · Sigue: <b>${esc((s.next.b||s.next.u).title)}</b>${s.next.u?' ('+fmt(s.next.u.date)+')':''}`:' · ¡Saga completa! 🎉'}</p>
      <div class="sagabooks">${s.items.map(i=>i.u?`<div class="sb up" title="${esc(i.u.title)} · sale ${fmt(i.u.date)}">${i.n||'?'}</div>`:`<div class="sb ${i.b.status==='Terminado'?'':'unread'}" data-act="open" data-id="${i.b.id}" title="${esc(i.b.title)}" style="background:${pal(i.b)[0]};color:${pal(i.b)[1]}">${i.n||'?'}</div>`).join('')}</div></div>`).join('')
      :'<div class="empty">Cuando cargues la saga y el número de tomo en tus libros, acá ves cuánto te falta y qué sigue.</div>'}
