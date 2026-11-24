@@ -1060,8 +1060,8 @@ function loadReader(){
   if(window.MBR)return Promise.resolve();
   if(rdLoading)return rdLoading;
   rdLoading=new Promise((ok,ko)=>{
-    const l=document.createElement('link');l.rel='stylesheet';l.href='reader/reader.css?v=20261124c';document.head.appendChild(l);
-    const sc=document.createElement('script');sc.src='reader/reader.js?v=20261124c';sc.onload=ok;sc.onerror=()=>{rdLoading=null;ko()};document.head.appendChild(sc)});
+    const l=document.createElement('link');l.rel='stylesheet';l.href='reader/reader.css?v=20261124d';document.head.appendChild(l);
+    const sc=document.createElement('script');sc.src='reader/reader.js?v=20261124d';sc.onload=ok;sc.onerror=()=>{rdLoading=null;ko()};document.head.appendChild(sc)});
   return rdLoading;
 }
 function vRead(){
@@ -1272,7 +1272,7 @@ function topProps(){
    ?`<div class="topprops">${at(3,'left:4%;',104)}${at(5,'left:26%;',92)}${at(0,'right:5%;',108)}</div>`
    :`<div class="topprops">${at(1,'left:5%;',90)}${at(2,'left:50%;margin-left:-42px;bottom:12px;',84)}${at(4,'right:6%;',84)}</div>`;
 }
-function spineDims(b){const h=hash(b.title),m=innerWidth<=760,w=Math.max(30,Math.min(70,Math.round(24+(b.pages||200)/14+(h%7)))),hh=168+(hash(b.author||'a')%38)+((b.pages||200)>400?10:0);return m?{w:Math.max(24,Math.round(w*.74)),h:Math.round(hh*.8)}:{w,h:hh}}
+function spineDims(b,desk){const h=hash(b.title),m=!desk&&innerWidth<=760,w=Math.max(30,Math.min(70,Math.round(24+(b.pages||200)/14+(h%7)))),hh=168+(hash(b.author||'a')%38)+((b.pages||200)>400?10:0);return m?{w:Math.max(24,Math.round(w*.74)),h:Math.round(hh*.8)}:{w,h:hh}}
 
 /* ===== Escena con imagen (Lila y Clásica, escritorio) ===== */
 const IMG_CFG={
@@ -1282,13 +1282,13 @@ const IMG_CFG={
  clasica:{img:'img/clasica.webp',base:[441,569,694,826],x:330,w:878,h:124,
   chand:[[662,86],[690,62],[716,52],[740,48],[796,48],[826,52],[852,62],[878,86]],sconce:[[135,118],[1405,118],[80,412],[1452,412]],
   fire:[1512,730],moon:[1090,142],petals:false}};
-const imgOK=()=>innerWidth>760;
+const imgOK=()=>true;
 const imgMode=()=>imgOK();
 function drawImgShelves(box){
   const C=IMG_CFG[theme()],lom=lib.mode==='lomos',list=filteredBooks(),W=C.w,items=[];let last=null;
   const ch=C.h-8,cw=Math.round(ch*118/176);
   list.forEach(b=>{if(alpha()){const L=letterOf(b);if(L!==last){items.push({div:L,w:40});last=L}}
-    const d=spineDims(b);items.push(lom?{b,w:Math.max(20,Math.round(d.w*.68)),h:Math.min(C.h-8,Math.round(d.h*.58))}:{b,w:cw+16,cw,ch})});
+    const d=spineDims(b,true);items.push(lom?{b,w:Math.max(20,Math.round(d.w*.68)),h:Math.min(C.h-8,Math.round(d.h*.58))}:{b,w:cw+16,cw,ch})});
   items.push({add:true,w:lom?34:cw+16});
   const rows=[];let cur=[],used=0;
   items.forEach(it=>{const wd=it.w+2;if(used+wd>W&&cur.length){rows.push(cur);cur=[];used=0}cur.push(it);used+=wd});
@@ -1309,7 +1309,11 @@ function drawImgShelves(box){
   box.innerHTML=`<div class="lsc"><div class="lsi" style="background-image:url(${C.img})">${rowsHtml}<div class="lsfx">${fx}</div></div>${pager}</div>`;fitImg(box);
   if(!list.length&&(lib.q||lib.filter!=='Todos'||lib.trope||lib.spice!==''))box.insertAdjacentHTML('afterbegin',`<div style="position:absolute;z-index:6;left:24px;top:24px;padding:10px 16px;border-radius:10px;background:rgba(40,16,60,.8);color:#f3e6f7;font-size:14px">No hay libros con esos filtros.</div>`);
 }
-function fitImg(box){const k=box.clientWidth/1536;box.querySelectorAll('.lsc').forEach(c=>{c.style.height=(1024*k)+'px';c.firstChild.style.transform=`scale(${k})`})}
+function fitImg(box){const bw=box.clientWidth;
+  if(innerWidth<=760){ /* celular: se recorta la zona de estantes de la imagen y se ajusta al ancho de la pantalla */
+    const C=IMG_CFG[theme()],x0=C.x-26,rw=C.w+52,y0=C.base[0]-C.h-46,rh=C.base[3]-y0+150,k=bw/rw;
+    box.querySelectorAll('.lsc').forEach(c=>{c.style.height=(rh*k)+'px';c.firstChild.style.transform=`translate(${-x0*k}px,${-y0*k}px) scale(${k})`});return}
+  const k=bw/1536;box.querySelectorAll('.lsc').forEach(c=>{c.style.height=(1024*k)+'px';c.firstChild.style.transform=`scale(${k})`})}
 function libPage(id){if(lib._pg&&lib._pg[id]!=null&&lib._pg[id]!==lib.page&&$('#shelves.ishelves')){lib.page=lib._pg[id];drawShelves()}}
 function drawShelves(){
   const box=$('#shelves');if(!box)return;
