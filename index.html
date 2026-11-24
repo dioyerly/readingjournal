@@ -1034,8 +1034,8 @@ function loadReader(){
   if(window.MBR)return Promise.resolve();
   if(rdLoading)return rdLoading;
   rdLoading=new Promise((ok,ko)=>{
-    const l=document.createElement('link');l.rel='stylesheet';l.href='reader/reader.css';document.head.appendChild(l);
-    const sc=document.createElement('script');sc.src='reader/reader.js';sc.onload=ok;sc.onerror=()=>{rdLoading=null;ko()};document.head.appendChild(sc)});
+    const l=document.createElement('link');l.rel='stylesheet';l.href='reader/reader.css?v=20261124b';document.head.appendChild(l);
+    const sc=document.createElement('script');sc.src='reader/reader.js?v=20261124b';sc.onload=ok;sc.onerror=()=>{rdLoading=null;ko()};document.head.appendChild(sc)});
   return rdLoading;
 }
 function vRead(){
