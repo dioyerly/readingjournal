@@ -1132,8 +1132,8 @@ function loadReader(){
   if(window.MBR)return Promise.resolve();
   if(rdLoading)return rdLoading;
   rdLoading=new Promise((ok,ko)=>{
-    const l=document.createElement('link');l.rel='stylesheet';l.href='reader/reader.css?v=20261124i';document.head.appendChild(l);
-    const sc=document.createElement('script');sc.src='reader/reader.js?v=20261124i';sc.onload=ok;sc.onerror=()=>{rdLoading=null;ko()};document.head.appendChild(sc)});
+    const l=document.createElement('link');l.rel='stylesheet';l.href='reader/reader.css?v=20261124j';document.head.appendChild(l);
+    const sc=document.createElement('script');sc.src='reader/reader.js?v=20261124j';sc.onload=ok;sc.onerror=()=>{rdLoading=null;ko()};document.head.appendChild(sc)});
   return rdLoading;
 }
 function vRead(){
@@ -1358,7 +1358,8 @@ const IMG_CFG={
   m:{img:'img/lila-m.webp',pm:[1024,1536],sc:1.2,x:163,w:695,h:142,base:[710,870,1032,1204],chand:[],sconce:[],fire:[-999,-999],moon:[-999,-999]}},
  clasica:{img:'img/clasica.webp',base:[441,569,694,826],x:330,w:878,h:124,
   chand:[[662,86],[690,62],[716,52],[740,48],[796,48],[826,52],[852,62],[878,86]],sconce:[[135,118],[1405,118],[80,412],[1452,412]],
-  fire:[1512,730],moon:[1090,142],petals:false}};
+  fire:[1512,730],moon:[1090,142],petals:false,
+  m:{img:'img/clasica-m.webp',pm:[1024,1536],sc:1.2,x:160,w:702,h:142,base:[710,868,1028,1210],chand:[],sconce:[],fire:[-999,-999],moon:[-999,-999]}}};
 const imgOK=()=>true;
 const imgMode=()=>imgOK();
 function mfx(C,mg,R,pt){
