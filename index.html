@@ -606,7 +606,7 @@ html[data-theme=lila] .floor::after{content:'';position:absolute;left:14%;right:
 .sp .fv{bottom:auto;top:21px;font-size:11px}
 
 /* ===== ESCENA CON IMAGEN (Lila, escritorio) ===== */
-.scene.img{padding:0;background:#2a1838;border-radius:18px;overflow:hidden;box-shadow:0 26px 60px rgba(85,44,108,.45)}
+html[data-theme=lila] .scene.img,.scene.img{padding:0;background:#2a1838;border:0;border-radius:18px;overflow:hidden;box-shadow:0 26px 60px rgba(85,44,108,.45)}
 .ishelves{position:relative}
 .lsc{position:relative;width:100%;overflow:hidden}
 .lsc+.lsc{margin-top:-1px}
@@ -1249,14 +1249,14 @@ function spineDims(b){const h=hash(b.title),m=innerWidth<=760,w=Math.max(30,Math
 const IMG_BASE=[309,486,661,841],IMG_PTS=[[255,9],[316,13],[542,13],[536,18],[324,19],[227,19],[250,10],[668,17],[890,17],[988,15],[994,10],[1218,14],[1283,13],[1210,21],[833,18],[736,21],[802,21],[564,23],[862,24],[957,23],[628,25],[701,26],[924,26],[1296,17],[1298,25],[393,33],[358,33],[502,35],[1025,35],[770,37],[1138,36],[1176,36],[1276,35],[466,42],[425,43],[1064,44],[1105,46],[776,41],[747,46],[789,47],[266,42],[1266,42],[768,8]];
 const IMG_CANDLES=[[73,627],[112,598],[151,627],[1383,627],[1424,598],[1464,627]];
 const imgOK=()=>theme()==='lila'&&innerWidth>760;
-const imgMode=()=>imgOK()&&lib.mode==='lomos';
+const imgMode=()=>imgOK();
 const todPref=()=>(S.settings&&S.settings.tod)||'auto';
 const todNow=()=>{const p=todPref();if(p!=='auto')return p;const h=new Date().getHours();return h>=7&&h<19?'dia':'noche'};
 function drawImgShelves(box){
-  const lom=true,list=filteredBooks(),W=892,tod=todNow(),items=[];let last=null;
+  const lom=lib.mode==='lomos',list=filteredBooks(),W=892,tod=todNow(),items=[];let last=null;
   list.forEach(b=>{if(alpha()){const L=letterOf(b);if(L!==last){items.push({div:L,w:40});last=L}}
-    const d=spineDims(b);items.push({b,w:Math.max(22,Math.round(d.w*.78)),h:Math.min(140,Math.round(d.h*.66))})});
-  items.push({add:true,w:38});
+    const d=spineDims(b);items.push(lom?{b,w:Math.max(22,Math.round(d.w*.78)),h:Math.min(140,Math.round(d.h*.66))}:{b,w:110,cw:94,ch:140})});
+  items.push({add:true,w:lom?38:110});
   const rows=[];let cur=[],used=0;
   items.forEach(it=>{const wd=it.w+2;if(used+wd>W&&cur.length){rows.push(cur);cur=[];used=0}cur.push(it);used+=wd});
   if(cur.length)rows.push(cur);while(rows.length%4)rows.push([]);
@@ -1272,7 +1272,7 @@ function drawImgShelves(box){
   for(let g=0;g<rows.length;g+=4){
     out+=`<div class="lsc"><div class="lsi" style="background-image:url(img/lila-${tod==='noche'?'noche':'dia'}.webp)">`+
     rows.slice(g,g+4).map((r,ri)=>`<div class="irow" style="top:${IMG_BASE[ri]-150}px">${r.map(it=>it.div?`<div class="divi" id="L-${it.div}" style="--dh:112px"><b>${it.div}</b></div>`
-      :it.add?`<div class="sp add" data-act="new" style="--w:36px;--h:112px" title="Agregar libro">+</div>`:itemHtml(it)).join('')}</div>`).join('')+
+      :it.add?(lom?`<div class="sp add" data-act="new" style="--w:36px;--h:112px" title="Agregar libro">+</div>`:`<div class="cv" data-act="new" style="--W:94px"><div class="cvadd" style="width:94px;height:140px;border-radius:4px">+</div></div>`):itemHtml(it)).join('')}</div>`).join('')+
     `<div class="lsfx">${fx()}</div></div></div>`;
   }
   box.innerHTML=out;fitImg(box);
@@ -1310,7 +1310,8 @@ function itemHtml(it){
     return `<div class="sp v${v}${two?' two':''} ${rd?'reading':''}" data-act="open" data-id="${b.id}" style="--w:${it.w}px;--h:${it.h}px;--c:${c};--tx:${tx};--g1:${tx};--pl:${pl};--fs:${fs}px"><i class="hd"></i>${rd?'<i class="rib"></i>':''}<span>${esc(b.title)}</span><i class="lg"></i>${b.fav?'<i class="fv">★</i>':''}</div>`;
   }
   const lbl=rd?'LEYENDO':b.status==='Abandonado'?'ABANDONADO':b.fav?'♥ FAVORITO':'';
-  return `<div class="cv" data-act="open" data-id="${b.id}" style="--W:118px">${lbl?`<span class="lbl" ${b.fav&&!rd?'style="background:#c0679a"':''}>${lbl}</span>`:''}${book3d(b,118,176)}</div>`;
+  const cw=it.cw||118,ch=it.ch||176;
+  return `<div class="cv" data-act="open" data-id="${b.id}" style="--W:${cw}px">${lbl?`<span class="lbl" ${b.fav&&!rd?'style="background:#c0679a"':''}>${lbl}</span>`:''}${book3d(b,cw,ch)}</div>`;
 }
 function tipHtml(b){return `<b>${esc(b.title)}</b><small>${esc(b.author)}${b.series?' · '+esc(b.series)+' #'+esc(b.seriesN):''}</small>
   <div style="margin:6px 0 4px">${b.rating?`<span class="stars">${starsTxt(b.rating)}</span> · `:''}${chiles(b.spice)} <small>${SPICE[b.spice||0][0]}</small></div>
