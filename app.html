@@ -1148,8 +1148,8 @@ function loadReader(){
   if(window.MBR)return Promise.resolve();
   if(rdLoading)return rdLoading;
   rdLoading=new Promise((ok,ko)=>{
-    const l=document.createElement('link');l.rel='stylesheet';l.href='reader/reader.css?v=20261124k';document.head.appendChild(l);
-    const sc=document.createElement('script');sc.src='reader/reader.js?v=20261124k';sc.onload=ok;sc.onerror=()=>{rdLoading=null;ko()};document.head.appendChild(sc)});
+    const l=document.createElement('link');l.rel='stylesheet';l.href='reader/reader.css?v=20261124l';document.head.appendChild(l);
+    const sc=document.createElement('script');sc.src='reader/reader.js?v=20261124l';sc.onload=ok;sc.onerror=()=>{rdLoading=null;ko()};document.head.appendChild(sc)});
   return rdLoading;
 }
 function vRead(){
@@ -1720,7 +1720,7 @@ let tt;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on
 function download(name,text,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1500)}
 const upById=id=>S.up.find(u=>u.id===id);
 const A={
-  rdRead(el){loadReader().then(()=>MBR.read(el.dataset.id))},rdPick(el,e){if(e&&e.target.closest('button')&&el.tagName!=='BUTTON')return;loadReader().then(()=>MBR.pick())},rdAttach(el){loadReader().then(()=>MBR.pick(el.dataset.id))},rdDetach(el){MBR.detach(el.dataset.id)},
+  rdRead(el){loadReader().then(()=>MBR.read(el.dataset.id))},rdPick(el,e){if(e&&e.target.closest('button')&&el.tagName!=='BUTTON')return;loadReader().then(()=>MBR.pick())},rdExample(){loadReader().then(()=>MBR.openExample())},rdAttach(el){loadReader().then(()=>MBR.pick(el.dataset.id))},rdDetach(el){MBR.detach(el.dataset.id)},
   syncNow(){SY.pull(false)},syncOut(){SY.out()},syncCancel(){SY.cancel()},
   nav(el){go(el.dataset.v)},open(el){openBook(el.dataset.id)},new(){openBook(null)},close(){closeModal()},
   toggleLang(){S.settings.lang=LANG==='es'?'en':'es';save();setLang(S.settings.lang);coverCache&&Object.keys(coverCache).forEach(k=>delete coverCache[k]);render()},
