@@ -639,10 +639,61 @@ html[data-theme] .scene.img::before{display:none}
 .mglow{position:absolute;width:190px;height:190px;margin:-95px 0 0 -95px;border-radius:50%;background:radial-gradient(circle,rgba(255,250,225,.55),rgba(190,200,255,.18) 45%,transparent 70%);animation:tw 5s ease-in-out infinite alternate}
 .mote{position:absolute;width:4px;height:4px;border-radius:50%;background:#fff6d6;box-shadow:0 0 6px 2px rgba(255,236,170,.8);opacity:0;animation:ffly var(--d) ease-in-out infinite}
 .fire{position:absolute;width:170px;height:170px;margin:-85px 0 0 -85px;border-radius:50%;mix-blend-mode:screen;background:radial-gradient(circle,rgba(255,170,70,.5),rgba(255,120,40,.18) 50%,transparent 70%);animation:flick 1.6s ease-in-out infinite alternate}
+.lseg,.lfbtn,.lfab{display:none}
+.lbg{position:absolute;inset:0}
 .pager{position:absolute;left:50%;bottom:2.2%;transform:translateX(-50%);z-index:6;display:flex;align-items:center;gap:12px;padding:5px 14px;border-radius:999px;background:rgba(40,16,60,.72);backdrop-filter:blur(4px);color:#fff;font:700 15px var(--serif);box-shadow:0 6px 18px rgba(0,0,0,.35)}
 .pager button{width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.18);color:#fff;font:700 22px/1 var(--serif);cursor:pointer}
 .pager button:hover:not(:disabled){background:rgba(255,255,255,.34)}.pager button:disabled{opacity:.3;cursor:default}
+@media(max-width:760px){
+  h1.pt{margin-bottom:2px}.sub{display:none}
+  .lwrap .tools{display:flex;flex-wrap:nowrap;gap:8px;margin:10px 0 8px;align-items:center}
+  .lwrap .tools input[type=search]{flex:1 1 0;min-width:0;max-width:none;padding:10px 14px;font-size:14px}
+  .lwrap .t2 .btn[data-act=new]{display:none}
+  .bwdemo{padding:9px 12px;gap:8px;font-size:12px;margin-bottom:10px}.bwdemo .bwbtns{display:flex;gap:6px;flex:1 1 100%}.bwdemo .bwbtns>*{flex:1;text-align:center;padding:8px 6px;font-size:11.5px;border-radius:99px;margin:0}
+  .lseg{display:inline-flex;flex:none}.lseg button{padding:9px 12px;display:grid;place-items:center}
+  .lfbtn{display:grid;grid-auto-flow:column;gap:4px;align-items:center;flex:none;position:relative;padding:9px 12px;border-radius:99px;border:1px solid var(--fieldb);background:var(--field);color:var(--fieldt)}
+  .lfbtn i{font:700 11px var(--sans);font-style:normal}.lfbtn.has{background:var(--chipon);color:var(--chipont);border-color:var(--chipon)}
+  .lwrap:not(.lf-open) .chips,.lwrap:not(.lf-open) .t2,.lwrap:not(.lf-open) .az{display:none}
+  .lwrap.lf-open .tools{flex-wrap:wrap}.lwrap.lf-open .chips{flex:1 1 100%;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0 -12px;padding:2px 12px}
+  .lwrap .t2 .seg{display:none}.lwrap .t2{margin-bottom:6px}
+  .lfab{display:grid;place-items:center;position:fixed;right:16px;bottom:calc(18px + env(safe-area-inset-bottom));z-index:30;width:56px;height:56px;border-radius:50%;font:300 32px/1 var(--serif);color:var(--accink);background:linear-gradient(var(--acc1),var(--acc2));box-shadow:0 8px 22px rgba(0,0,0,.35)}
+  html[data-theme] .scene.img{margin:0 -12px;border-radius:0}
+  .irow.m .sp,.irow.m .cv{flex:none}
+  .pager{bottom:10px;padding:4px 10px;gap:10px}.pager button{width:34px;height:34px}
+}
 @media(prefers-reduced-motion:reduce){.cfl,.fl,.mglow,.fire{animation:none}.lsfx .petal,.mote{display:none}}
+
+/* ===== v2: botones propios (tipo "lomo de libro": relieve suave, esquinas cuidadas) ===== */
+.btn,.mini,.chip,.seg,.lfbtn,.lfab,.pager button{-webkit-tap-highlight-color:transparent}
+.btn{border-radius:13px;padding:12px 22px;font:700 14.5px var(--serif);letter-spacing:.02em;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5),inset 0 -2px 0 rgba(0,0,0,.16),0 7px 14px -6px rgba(0,0,0,.4);transition:transform .15s,box-shadow .15s,filter .2s}
+.btn:hover{transform:translateY(-1px);filter:brightness(1.06)}
+.btn:active{transform:translateY(1px);box-shadow:inset 0 2px 4px rgba(0,0,0,.25)}
+.btn.dark,.card .btn.dark{border:1.5px solid var(--fieldb);box-shadow:none;background:transparent;color:var(--fieldt)}
+.card .btn.dark{color:var(--ink);border-color:var(--cardin)}
+.btn.dark:hover{background:var(--soft)}
+.mini{border-radius:10px;padding:7px 13px;font:700 12.5px var(--sans);letter-spacing:.01em;box-shadow:inset 0 -2px 0 rgba(0,0,0,.14),inset 0 1px 0 rgba(255,255,255,.3)}
+.mini.o{box-shadow:none;border-width:1.5px}
+.chip{border-radius:11px;padding:8px 13px;box-shadow:inset 0 -2px 0 rgba(0,0,0,.05)}
+.chip.on{box-shadow:inset 0 -3px 0 rgba(0,0,0,.18)}
+.seg{border-radius:12px;padding:3px;gap:3px;background:var(--field)}
+.seg button{border-radius:9px}
+.lfbtn{border-radius:12px!important}
+.pager button{border-radius:12px}
+@media(max-width:760px){
+  /* inicio en el celular: lo importante primero y sin tantas tarjetas gigantes */
+  h1.pt{font-size:30px;margin-bottom:0}
+  .sub{display:none}
+  .grid.g4{display:flex;gap:10px;overflow-x:auto;margin:10px -12px 0;padding:2px 12px 8px;scroll-snap-type:x mandatory;scrollbar-width:none}
+  .grid.g4::-webkit-scrollbar{display:none}
+  .grid.g4 .kpi{flex:0 0 138px;scroll-snap-align:start;padding:12px 13px}
+  .grid.g4 .kpi .n{font-size:30px}.grid.g4 .kpi .s{font-size:11px}.grid.g4 .kpi .l{font-size:9px}
+  .moodbtns{flex-wrap:nowrap;overflow-x:auto;margin:0 -15px;padding:2px 15px 6px;scrollbar-width:none}
+  .moodbtns::-webkit-scrollbar{display:none}.moodbtns button{flex:0 0 auto!important;white-space:nowrap}
+  .reading{gap:14px}.reading .th{width:78px;height:117px}
+  .logrow{gap:6px}.logrow .mini{padding:9px 10px;flex:1 1 auto}
+  .card{border-radius:16px}
+}
 </style>
 </head>
 <body>
@@ -1023,7 +1074,7 @@ let Q={i:0,ans:{tropes:[]},res:false};
 function renderNav(){
   $('#nav').innerHTML=VIEWS.map(v=>`<button data-act="nav" data-v="${v[0]}" class="${view===v[0]?'on':''}">${v[1]}</button>`).join('');
   const ys=new Set([new Date().getFullYear(),2027,Y()]);S.books.forEach(b=>{if(b.end)ys.add(+b.end.slice(0,4))});
-  {const on=$('#nav .on');if(on&&on.scrollIntoView)on.scrollIntoView({inline:'center',block:'nearest'})}
+  {const nv=$('#nav'),on=$('#nav .on');if(nv&&on)nv.scrollLeft+=(on.getBoundingClientRect().left-nv.getBoundingClientRect().left)-(nv.clientWidth-on.offsetWidth)/2}
   $('#yearsel').innerHTML=[...ys].sort((a,b)=>b-a).map(y=>`<option ${y===Y()?'selected':''}>${y}</option>`).join('');
   $('#themebtn').innerHTML=theme()==='lila'?'🕯️<span class="tl"> Clásica</span>':'💜<span class="tl"> Lila</span>';
   $('#langbtn').innerHTML=LANG==='es'?'🌐 EN':'🌐 ES';
@@ -1060,8 +1111,8 @@ function loadReader(){
   if(window.MBR)return Promise.resolve();
   if(rdLoading)return rdLoading;
   rdLoading=new Promise((ok,ko)=>{
-    const l=document.createElement('link');l.rel='stylesheet';l.href='reader/reader.css?v=20261124d';document.head.appendChild(l);
-    const sc=document.createElement('script');sc.src='reader/reader.js?v=20261124d';sc.onload=ok;sc.onerror=()=>{rdLoading=null;ko()};document.head.appendChild(sc)});
+    const l=document.createElement('link');l.rel='stylesheet';l.href='reader/reader.css?v=20261124e';document.head.appendChild(l);
+    const sc=document.createElement('script');sc.src='reader/reader.js?v=20261124e';sc.onload=ok;sc.onerror=()=>{rdLoading=null;ko()};document.head.appendChild(sc)});
   return rdLoading;
 }
 function vRead(){
@@ -1136,7 +1187,10 @@ function vLib(){
      <svg class="ladder" viewBox="0 0 58 520"><g stroke="#8a5a2d" stroke-width="6" stroke-linecap="round"><path d="M10 0 L2 520"/><path d="M48 0 L56 520"/></g><g stroke="#b07a40" stroke-width="5">${Array.from({length:16},(_,i)=>`<path d="M${9-i*.5} ${22+i*32}H${49+i*.5}"/>`).join('')}</g><rect x="4" y="0" width="50" height="9" rx="3" fill="#d9b765"/></svg>`
    :`<div id="dBack"></div><div id="dFront"></div>`;
   return `<h1 class="pt">Mi <em>biblioteca</em></h1><p class="sub">${S.books.length} libros ordenados ${lib.sort==='autor'?'por apellido de la autora, A–Z':lib.sort==='titulo'?'alfabéticamente, A–Z':''} · ${matchMedia('(hover:none)').matches?'tocá un libro para ver su ficha':'pasá el mouse para ver la ficha rápida'}</p>
+  <div class="lwrap ${lib.fopen?'lf-open':''}">
   <div class="tools"><input type="search" id="q" placeholder="Buscar título, autora, tropo, saga…" value="${esc(lib.q)}">
+   <div class="seg lseg"><button data-act="mode" data-m="lomos" class="${lib.mode==='lomos'?'on':''}" aria-label="Lomos"><svg viewBox="0 0 20 16" width="18" height="15"><path d="M2 1h3v14H2zM7 3h3v12H7zM12 1h3v14h-3zM17 4h2v11h-2z" fill="currentColor"/></svg></button><button data-act="mode" data-m="portadas" class="${lib.mode==='portadas'?'on':''}" aria-label="Portadas"><svg viewBox="0 0 20 16" width="18" height="15"><path d="M1 1h7v14H1zM12 1h7v14h-7z" fill="currentColor"/></svg></button></div>
+   <button class="lfbtn ${(lib.filter!=='Todos')+(lib.trope?1:0)+(lib.spice!==''?1:0)?'has':''}" data-act="lfilt" aria-label="Filtros"><svg viewBox="0 0 20 16" width="18" height="15"><path d="M1 3h18M4 8h12M7 13h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg><i>${(lib.filter!=='Todos')+(lib.trope?1:0)+(lib.spice!==''?1:0)||''}</i></button>
    <div class="chips">${['Todos','Leyendo','Por leer','Terminado','Favoritos','Abandonado'].map(k=>`<button class="chip ${lib.filter===k?'on':''}" data-act="filter" data-k="${k}">${k==='Terminado'?'Terminados':k==='Abandonado'?'Abandonados':k} (${cnt(k)})</button>`).join('')}</div></div>
   <div class="tools t2" style="margin-top:0">
    <select id="sort">${[['titulo','🔤 Título A–Z'],['autor','✍️ Autora A–Z'],['saga','📚 Por saga'],['fecha','🕒 Más recientes'],['puntaje','⭐ Mejor puntuados'],['spice','🌶️ Más spicy']].map(o=>`<option value="${o[0]}" ${lib.sort===o[0]?'selected':''}>${o[1]}</option>`).join('')}</select>
@@ -1145,6 +1199,7 @@ function vLib(){
    <div class="seg"><button data-act="mode" data-m="lomos" class="${lib.mode==='lomos'?'on':''}">Lomos</button><button data-act="mode" data-m="portadas" class="${lib.mode==='portadas'?'on':''}">Portadas</button></div>
    <button class="btn dark" data-act="random">🎲 Elegime uno</button><button class="btn" data-act="new">+ Agregar libro</button></div>
   ${alpha()?`<div class="az"><span>Ir a la letra</span>${'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(L=>`<button data-act="jump" data-l="${L}" ${lettersHave.has(L)?'':'disabled'}>${L}</button>`).join('')}</div>`:''}
+  </div><button class="lfab" data-act="new" aria-label="Agregar libro">＋</button>
   ${imgMode()?`<div class="scene img" id="scene"><div class="ishelves" id="shelves"></div></div>`:`<div class="scene" id="scene">${dec}<div class="case">${topProps()}<div class="shelves" id="shelves"></div><div class="plinth"></div></div><div class="floor"></div></div>`}`;
 }
 /* ===== escena de cuento: ramas, glicinas, flores, luces rosas ===== */
@@ -1285,7 +1340,7 @@ const IMG_CFG={
 const imgOK=()=>true;
 const imgMode=()=>imgOK();
 function drawImgShelves(box){
-  const C=IMG_CFG[theme()],lom=lib.mode==='lomos',list=filteredBooks(),W=C.w,items=[];let last=null;
+  const mob=innerWidth<=760,SC=1.8,C=IMG_CFG[theme()],lom=lib.mode==='lomos',list=filteredBooks(),W=mob?Math.round(C.w/SC):C.w,items=[];let last=null;
   const ch=C.h-8,cw=Math.round(ch*118/176);
   list.forEach(b=>{if(alpha()){const L=letterOf(b);if(L!==last){items.push({div:L,w:40});last=L}}
     const d=spineDims(b,true);items.push(lom?{b,w:Math.max(20,Math.round(d.w*.68)),h:Math.min(C.h-8,Math.round(d.h*.58))}:{b,w:cw+16,cw,ch})});
@@ -1303,17 +1358,16 @@ function drawImgShelves(box){
   C.chand.forEach(([x,y],i)=>{fx+=pt(x,y,'cfl',`width:6px;height:14px;margin:-13px 0 0 -3px;--d:${(1.1+(i%3)*.3).toFixed(2)}s;animation-delay:-${(i*.27).toFixed(2)}s`)});
   C.sconce.forEach(([x,y],i)=>{fx+=pt(x,y,'cfl',`width:7px;height:16px;margin:-14px 0 0 -3.5px;--d:${(1.2+(i%3)*.25).toFixed(2)}s;animation-delay:-${(i*.4).toFixed(1)}s`)});
   fx+=pt(C.fire[0],C.fire[1],'fire')+pt(C.moon[0],C.moon[1],'mglow');
-  const rowsHtml=pr.map((r,ri)=>`<div class="irow" style="left:${C.x}px;width:${W}px;height:${C.h}px;top:${C.base[ri]-C.h+1}px">${r.map(it=>it.div?`<div class="divi" id="L-${it.div}" style="--dh:${C.h-14}px"><b>${it.div}</b></div>`
+  let mg=null;
+  if(mob){const bw=box.clientWidth||innerWidth-24,mx=60,x0=C.x-mx,rw=C.w+mx*2,y0=C.base[0]-C.h-50,y1=C.base[3]+112,kx=bw/rw,ky=kx*SC;mg={x0,y0,kx,ky,h:Math.round((y1-y0)*ky),W:bw}}
+  const rowsHtml=pr.map((r,ri)=>`<div class="irow${mob?' m':''}" style="${mob?`left:${Math.round((C.x-mg.x0)*mg.kx)}px;top:${Math.round((C.base[ri]-C.h+1-mg.y0)*mg.ky)}px;width:${W}px;height:${C.h}px;transform:scale(${mg.ky});transform-origin:0 0`:`left:${C.x}px;width:${W}px;height:${C.h}px;top:${C.base[ri]-C.h+1}px`}">${r.map(it=>it.div?`<div class="divi" id="L-${it.div}" style="--dh:${C.h-14}px"><b>${it.div}</b></div>`
     :it.add?(lom?`<div class="sp add" data-act="new" style="--w:32px;--h:${C.h-18}px" title="Agregar libro">+</div>`:`<div class="cv" data-act="new" style="--W:${cw}px"><div class="cvadd" style="width:${cw}px;height:${ch}px;border-radius:4px">+</div></div>`):itemHtml(it)).join('')}</div>`).join('');
   const pager=pages>1?`<div class="pager"><button data-act="pg" data-d="-1" ${lib.page<=0?'disabled':''} title="Anterior">‹</button><span>${lib.page+1} / ${pages}</span><button data-act="pg" data-d="1" ${lib.page>=pages-1?'disabled':''} title="Siguiente">›</button></div>`:'';
-  box.innerHTML=`<div class="lsc"><div class="lsi" style="background-image:url(${C.img})">${rowsHtml}<div class="lsfx">${fx}</div></div>${pager}</div>`;fitImg(box);
+  if(mob)box.innerHTML=`<div class="lsc" style="height:${mg.h}px"><div class="lbg" style="background:url(${C.img}) ${Math.round(-mg.x0*mg.kx)}px ${Math.round(-mg.y0*mg.ky)}px/${Math.round(1536*mg.kx)}px ${Math.round(1024*mg.ky)}px no-repeat"></div>${rowsHtml}${pager}</div>`;
+  else{box.innerHTML=`<div class="lsc"><div class="lsi" style="background-image:url(${C.img})">${rowsHtml}<div class="lsfx">${fx}</div></div>${pager}</div>`;fitImg(box)}
   if(!list.length&&(lib.q||lib.filter!=='Todos'||lib.trope||lib.spice!==''))box.insertAdjacentHTML('afterbegin',`<div style="position:absolute;z-index:6;left:24px;top:24px;padding:10px 16px;border-radius:10px;background:rgba(40,16,60,.8);color:#f3e6f7;font-size:14px">No hay libros con esos filtros.</div>`);
 }
-function fitImg(box){const bw=box.clientWidth;
-  if(innerWidth<=760){ /* celular: se recorta la zona de estantes de la imagen y se ajusta al ancho de la pantalla */
-    const C=IMG_CFG[theme()],x0=C.x-26,rw=C.w+52,y0=C.base[0]-C.h-46,rh=C.base[3]-y0+150,k=bw/rw;
-    box.querySelectorAll('.lsc').forEach(c=>{c.style.height=(rh*k)+'px';c.firstChild.style.transform=`translate(${-x0*k}px,${-y0*k}px) scale(${k})`});return}
-  const k=bw/1536;box.querySelectorAll('.lsc').forEach(c=>{c.style.height=(1024*k)+'px';c.firstChild.style.transform=`scale(${k})`})}
+function fitImg(box){if(innerWidth<=760)return;const k=box.clientWidth/1536;box.querySelectorAll('.lsc').forEach(c=>{c.style.height=(1024*k)+'px';c.firstChild.style.transform=`scale(${k})`})}
 function libPage(id){if(lib._pg&&lib._pg[id]!=null&&lib._pg[id]!==lib.page&&$('#shelves.ishelves')){lib.page=lib._pg[id];drawShelves()}}
 function drawShelves(){
   const box=$('#shelves');if(!box)return;
@@ -1621,6 +1675,7 @@ const A={
   toggleTheme(){S.settings.theme=theme()==='lila'?'clasica':'lila';save();render()},
   setTheme(el){S.settings.theme=el.dataset.t;save();render()},
   filter(el){lib.filter=el.dataset.k;lib.page=0;render()},mode(el){lib.mode=el.dataset.m;lib.page=0;render()},pg(el){lib.page=Math.max(0,(lib.page||0)+(+el.dataset.d));drawShelves()},
+  lfilt(el){lib.fopen=!lib.fopen;const w=el.closest('.lwrap');if(w)w.classList.toggle('lf-open',lib.fopen)},
   jump(el){libPage('L-'+el.dataset.l);const d=$('#L-'+el.dataset.l);if(d){d.scrollIntoView({block:'center',behavior:'smooth'});const nx=d.nextElementSibling;[d,nx].forEach(x=>{if(x){x.classList.remove('flash');void x.offsetWidth;x.classList.add('flash')}})}},
   random(){const pool=S.books.filter(b=>b.status==='Por leer');if(!pool.length){toast('No tenés libros en tu pila de "Por leer"');return}
     const b=pool[Math.floor(Math.random()*pool.length)];lib.filter='Por leer';lib.q='';lib.trope='';lib.spice='';lib.page=0;render();libPage(b.id);
@@ -1711,7 +1766,7 @@ $('#fileCam').onchange=e=>{const f=e.target.files[0];e.target.value='';if(f)setC
 $('#fileImport').onchange=e=>{const f=e.target.files[0];e.target.value='';if(!f)return;const r=new FileReader();
   r.onload=()=>{try{const d=JSON.parse(r.result);if(!d.books||!d.settings)throw 0;if(!confirm('Esto reemplaza tu biblioteca actual por la del respaldo. ¿Seguimos?'))return;
     covers=d._covers||{};delete d._covers;S=migrate(d);S.demo=false;IDB.clear();Object.entries(covers).forEach(([k,v])=>IDB.set(k,v));save();render();toast('Respaldo cargado ✔')}catch(err){toast('Ese archivo no es un respaldo válido')}};r.readAsText(f)};
-let rz;window.addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{if(view!=='lib')return;if(!!$('#scene.img')!==imgMode())render();else drawShelves()},150)});
+let rz,lastW=innerWidth;window.addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{if(innerWidth===lastW)return;lastW=innerWidth;if(view!=='lib')return;if(!!$('#scene.img')!==imgMode())render();else drawShelves()},150)});
 
 /* ================= IDIOMA: español / English ================= */
 let LANG='es';
