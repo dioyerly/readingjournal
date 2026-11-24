@@ -1111,8 +1111,8 @@ function loadReader(){
   if(window.MBR)return Promise.resolve();
   if(rdLoading)return rdLoading;
   rdLoading=new Promise((ok,ko)=>{
-    const l=document.createElement('link');l.rel='stylesheet';l.href='reader/reader.css?v=20261124e';document.head.appendChild(l);
-    const sc=document.createElement('script');sc.src='reader/reader.js?v=20261124e';sc.onload=ok;sc.onerror=()=>{rdLoading=null;ko()};document.head.appendChild(sc)});
+    const l=document.createElement('link');l.rel='stylesheet';l.href='reader/reader.css?v=20261124f';document.head.appendChild(l);
+    const sc=document.createElement('script');sc.src='reader/reader.js?v=20261124f';sc.onload=ok;sc.onerror=()=>{rdLoading=null;ko()};document.head.appendChild(sc)});
   return rdLoading;
 }
 function vRead(){
@@ -1339,6 +1339,18 @@ const IMG_CFG={
   fire:[1512,730],moon:[1090,142],petals:false}};
 const imgOK=()=>true;
 const imgMode=()=>imgOK();
+function mfx(C,mg,R,pt){
+  const X=x=>Math.round((x-mg.x0)*mg.kx),Y=y=>Math.round((y-mg.y0)*mg.ky),inb=(x,y)=>x>=0&&x<=mg.W&&y>=0&&y<=mg.h;
+  let f='';
+  if(C.petals)for(let i=0;i<9;i++){const l=Math.round(R()<.5?4+R()*mg.W*.12:mg.W*.88+R()*mg.W*.1);f+=`<i class="petal" style="left:${l}px;--d:${Math.round(11+R()*9)}s;--s:${Math.round(8+R()*16)}px;--h:${mg.h}px;animation-delay:-${Math.round(R()*18)}s;width:10px;height:8px"></i>`}
+  else for(let i=0;i<14;i++)f+=`<i class="mote" style="left:${Math.round(R()*mg.W)}px;top:${Math.round(mg.h*.2+R()*mg.h*.6)}px;--d:${Math.round(7+R()*8)}s;--x:${Math.round(-14+R()*28)}px;animation-delay:-${Math.round(R()*12)}s"></i>`;
+  const sc=Math.max(.5,mg.kx);
+  (C.chand||[]).forEach(([x,y],i)=>{if(inb(X(x),Y(y)))f+=pt(X(x),Y(y),'cfl',`transform-origin:50% 100%;zoom:${sc.toFixed(2)};--d:${(1.1+(i%3)*.3).toFixed(2)}s;animation-delay:-${(i*.27).toFixed(2)}s`)});
+  (C.sconce||[]).forEach(([x,y],i)=>{if(inb(X(x),Y(y)))f+=pt(X(x),Y(y),'cfl',`--d:${(1.2+(i%3)*.25).toFixed(2)}s;animation-delay:-${(i*.4).toFixed(1)}s`)});
+  if(inb(X(C.fire[0]),Y(C.fire[1])))f+=pt(X(C.fire[0]),Y(C.fire[1]),'fire');
+  if(inb(X(C.moon[0]),Y(C.moon[1])))f+=pt(X(C.moon[0]),Y(C.moon[1]),'mglow');
+  return `<div class="lsfx">${f}</div>`;
+}
 function drawImgShelves(box){
   const mob=innerWidth<=760,SC=1.8,C=IMG_CFG[theme()],lom=lib.mode==='lomos',list=filteredBooks(),W=mob?Math.round(C.w/SC):C.w,items=[];let last=null;
   const ch=C.h-8,cw=Math.round(ch*118/176);
@@ -1363,7 +1375,7 @@ function drawImgShelves(box){
   const rowsHtml=pr.map((r,ri)=>`<div class="irow${mob?' m':''}" style="${mob?`left:${Math.round((C.x-mg.x0)*mg.kx)}px;top:${Math.round((C.base[ri]-C.h+1-mg.y0)*mg.ky)}px;width:${W}px;height:${C.h}px;transform:scale(${mg.ky});transform-origin:0 0`:`left:${C.x}px;width:${W}px;height:${C.h}px;top:${C.base[ri]-C.h+1}px`}">${r.map(it=>it.div?`<div class="divi" id="L-${it.div}" style="--dh:${C.h-14}px"><b>${it.div}</b></div>`
     :it.add?(lom?`<div class="sp add" data-act="new" style="--w:32px;--h:${C.h-18}px" title="Agregar libro">+</div>`:`<div class="cv" data-act="new" style="--W:${cw}px"><div class="cvadd" style="width:${cw}px;height:${ch}px;border-radius:4px">+</div></div>`):itemHtml(it)).join('')}</div>`).join('');
   const pager=pages>1?`<div class="pager"><button data-act="pg" data-d="-1" ${lib.page<=0?'disabled':''} title="Anterior">‹</button><span>${lib.page+1} / ${pages}</span><button data-act="pg" data-d="1" ${lib.page>=pages-1?'disabled':''} title="Siguiente">›</button></div>`:'';
-  if(mob)box.innerHTML=`<div class="lsc" style="height:${mg.h}px"><div class="lbg" style="background:url(${C.img}) ${Math.round(-mg.x0*mg.kx)}px ${Math.round(-mg.y0*mg.ky)}px/${Math.round(1536*mg.kx)}px ${Math.round(1024*mg.ky)}px no-repeat"></div>${rowsHtml}${pager}</div>`;
+  if(mob)box.innerHTML=`<div class="lsc" style="height:${mg.h}px"><div class="lbg" style="background:url(${C.img}) ${Math.round(-mg.x0*mg.kx)}px ${Math.round(-mg.y0*mg.ky)}px/${Math.round(1536*mg.kx)}px ${Math.round(1024*mg.ky)}px no-repeat"></div>${rowsHtml}${mfx(C,mg,R,pt)}${pager}</div>`;
   else{box.innerHTML=`<div class="lsc"><div class="lsi" style="background-image:url(${C.img})">${rowsHtml}<div class="lsfx">${fx}</div></div>${pager}</div>`;fitImg(box)}
   if(!list.length&&(lib.q||lib.filter!=='Todos'||lib.trope||lib.spice!==''))box.insertAdjacentHTML('afterbegin',`<div style="position:absolute;z-index:6;left:24px;top:24px;padding:10px 16px;border-radius:10px;background:rgba(40,16,60,.8);color:#f3e6f7;font-size:14px">No hay libros con esos filtros.</div>`);
 }
