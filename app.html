@@ -702,6 +702,19 @@ html[data-theme] .scene.img::before{display:none}
 .moodbtns button:hover .mi{transform:rotate(-8deg) scale(1.1)}.moodbtns .mi{transition:transform .2s}
 .card>h3:first-child{display:flex;align-items:center;gap:9px}
 .card>h3:first-child::before{content:"";width:7px;height:7px;transform:rotate(45deg);background:linear-gradient(135deg,var(--acc1),var(--acc2));border-radius:2px;flex:none}
+
+/* ===== v2: que nada se salga del ancho del celular ===== */
+@media(max-width:1050px){.g3,.g2,.hero{grid-template-columns:minmax(0,1fr)!important}.g2>*,.g3>*,.hero>*,.grid>*{min-width:0}}
+@media(max-width:760px){
+  html,body{max-width:100%;overflow-x:hidden}
+  main,.wrap,.page,#app,#view{max-width:100%;min-width:0}
+  .card{min-width:0;max-width:100%}
+  .logrow{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .logrow input{grid-column:1/-1;width:100%;padding:10px 12px;font-size:15px}
+  .logrow .mini{width:100%;padding:11px 8px;text-align:center}
+  .logrow .mini.o,.logrow .mini:nth-child(2):nth-last-child(2){grid-column:1/-1}
+  .reading p{overflow-wrap:anywhere}
+}
 </style>
 </head>
 <body>
@@ -1132,8 +1145,8 @@ function loadReader(){
   if(window.MBR)return Promise.resolve();
   if(rdLoading)return rdLoading;
   rdLoading=new Promise((ok,ko)=>{
-    const l=document.createElement('link');l.rel='stylesheet';l.href='reader/reader.css?v=20261124j';document.head.appendChild(l);
-    const sc=document.createElement('script');sc.src='reader/reader.js?v=20261124j';sc.onload=ok;sc.onerror=()=>{rdLoading=null;ko()};document.head.appendChild(sc)});
+    const l=document.createElement('link');l.rel='stylesheet';l.href='reader/reader.css?v=20261124k';document.head.appendChild(l);
+    const sc=document.createElement('script');sc.src='reader/reader.js?v=20261124k';sc.onload=ok;sc.onerror=()=>{rdLoading=null;ko()};document.head.appendChild(sc)});
   return rdLoading;
 }
 function vRead(){
@@ -1151,7 +1164,7 @@ function vHome(){
   const msg=!s.me?`El ${Y()} todavía no empezó: ya podés ir armando tus metas y tus lanzamientos.`:s.f.length>=G.books?'🎉 ¡Cumpliste tu meta del año!':s.f.length>=s.exp?`✔ Vas al día: ${s.f.length} de ${s.exp} libros esperados a esta altura.`:`Vas ${s.exp-s.f.length} libro(s) atrás: ¡todavía llegás!`;
   const reading=s.reading.length?s.reading.map(b=>{const p=b.pages?Math.min(100,Math.round((b.page||0)/b.pages*100)):0;
     return `<div class="reading">${thumb(b,64,96)}<div style="flex:1;min-width:0"><h4>${esc(b.title)}</h4><p>${esc(b.author)} · ${b.page||0} de ${b.pages||'?'} páginas · ${p}%</p><div class="bar"><i style="width:${p}%"></i></div>
-     <div class="logrow"><input type="number" min="1" placeholder="págs. de hoy" id="lp-${b.id}"><button class="mini" data-act="logPages" data-id="${b.id}">+ Registrar</button>${b.dig?`<button class="mini" data-act="rdRead" data-id="${b.id}">📖 Leer</button>`:''}<button class="mini o" data-act="finish" data-id="${b.id}">¡Lo terminé!</button></div></div></div>`}).join('')
+     <div class="logrow"><input type="number" min="1" placeholder="págs. de hoy" id="lp-${b.id}"><button class="mini" data-act="logPages" data-id="${b.id}">+ Registrar</button>${b.dig?`<button class="mini" data-act="rdRead" data-id="${b.id}">Leer</button>`:''}<button class="mini o" data-act="finish" data-id="${b.id}">¡Lo terminé!</button></div></div></div>`}).join('')
     :`<div class="empty">No tenés ningún libro en curso. <a href="#" data-act="nav" data-v="quiz">Hacé el test ✨</a> y te digo cuál empezar.</div>`;
   const nextUp=S.up.filter(u=>u.date>today()).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,3);
   return `<h1 class="pt">Hola, <em>${esc(S.settings.name)}</em></h1><p class="sub">Tu diario de lecturas ${Y()}</p>
