@@ -606,7 +606,8 @@ html[data-theme=lila] .floor::after{content:'';position:absolute;left:14%;right:
 .sp .fv{bottom:auto;top:21px;font-size:11px}
 
 /* ===== ESCENA CON IMAGEN (Lila, escritorio) ===== */
-html[data-theme=lila] .scene.img,.scene.img{padding:0;background:#2a1838;border:0;border-radius:18px;overflow:hidden;box-shadow:0 26px 60px rgba(85,44,108,.45)}
+html[data-theme] .scene.img{padding:0;background:#2a1838;border:0;border-radius:18px;overflow:hidden;box-shadow:0 26px 60px rgba(85,44,108,.45)}
+html[data-theme] .scene.img::before{display:none}
 .ishelves{position:relative}
 .lsc{position:relative;width:100%;overflow:hidden}
 .lsc+.lsc{margin-top:-1px}
@@ -621,8 +622,11 @@ html[data-theme=lila] .scene.img,.scene.img{padding:0;background:#2a1838;border:
 .fl{position:absolute;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;background:radial-gradient(circle,rgba(255,244,190,.95),rgba(255,214,120,.4) 45%,transparent 70%);animation:tw 2.6s ease-in-out infinite alternate}
 .mglow{position:absolute;width:190px;height:190px;margin:-95px 0 0 -95px;border-radius:50%;background:radial-gradient(circle,rgba(255,250,225,.55),rgba(190,200,255,.18) 45%,transparent 70%);animation:tw 5s ease-in-out infinite alternate}
 .mote{position:absolute;width:4px;height:4px;border-radius:50%;background:#fff6d6;box-shadow:0 0 6px 2px rgba(255,236,170,.8);opacity:0;animation:ffly var(--d) ease-in-out infinite}
-.todseg{display:inline-flex}
-@media(prefers-reduced-motion:reduce){.cfl,.fl,.mglow{animation:none}.lsfx .petal,.mote{display:none}}
+.fire{position:absolute;width:170px;height:170px;margin:-85px 0 0 -85px;border-radius:50%;mix-blend-mode:screen;background:radial-gradient(circle,rgba(255,170,70,.5),rgba(255,120,40,.18) 50%,transparent 70%);animation:flick 1.6s ease-in-out infinite alternate}
+.pager{position:absolute;left:50%;bottom:2.2%;transform:translateX(-50%);z-index:6;display:flex;align-items:center;gap:12px;padding:5px 14px;border-radius:999px;background:rgba(40,16,60,.72);backdrop-filter:blur(4px);color:#fff;font:700 15px var(--serif);box-shadow:0 6px 18px rgba(0,0,0,.35)}
+.pager button{width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.18);color:#fff;font:700 22px/1 var(--serif);cursor:pointer}
+.pager button:hover:not(:disabled){background:rgba(255,255,255,.34)}.pager button:disabled{opacity:.3;cursor:default}
+@media(prefers-reduced-motion:reduce){.cfl,.fl,.mglow,.fire{animation:none}.lsfx .petal,.mote{display:none}}
 </style>
 </head>
 <body>
@@ -997,7 +1001,7 @@ function radar(v){
 
 /* ================= navegación ================= */
 const VIEWS=[['home','🏠 Inicio'],['lib','📚 Biblioteca'],['read','📖 Mi lector'],['quiz','✨ ¿Qué leo?'],['adn','🧬 Mi ADN lector'],['next','📅 Lo que viene'],['reto','🏆 Reto'],['wish','🛍 Wishlist'],['quotes','💬 Citas'],['set','⚙️ Ajustes']];
-let view='home',lib={filter:'Todos',sort:'titulo',mode:'lomos',q:'',trope:'',spice:''};
+let view='home',lib={page:0,filter:'Todos',sort:'titulo',mode:'lomos',q:'',trope:'',spice:''};
 let Q={i:0,ans:{tropes:[]},res:false};
 function renderNav(){
   $('#nav').innerHTML=VIEWS.map(v=>`<button data-act="nav" data-v="${v[0]}" class="${view===v[0]?'on':''}">${v[1]}</button>`).join('');
@@ -1112,7 +1116,6 @@ function vLib(){
    <select id="sort">${[['titulo','🔤 Título A–Z'],['autor','✍️ Autora A–Z'],['saga','📚 Por saga'],['fecha','🕒 Más recientes'],['puntaje','⭐ Mejor puntuados'],['spice','🌶️ Más spicy']].map(o=>`<option value="${o[0]}" ${lib.sort===o[0]?'selected':''}>${o[1]}</option>`).join('')}</select>
    <select id="ftrope"><option value="">💞 Todos los tropos</option>${used.map(t=>`<option ${lib.trope===t?'selected':''} value="${esc(t)}">${tE(t)} ${esc(t)}</option>`).join('')}</select>
    <select id="fspice"><option value="">🌶️ Cualquier spicy</option><option value="0" ${lib.spice==='0'?'selected':''}>Sin spicy</option>${[1,2,3,4,5].map(n=>`<option value="${n}" ${lib.spice===String(n)?'selected':''}>${'🌶️'.repeat(n)} o más</option>`).join('')}</select>
-   ${imgOK()?`<div class="seg todseg" title="Luz de la biblioteca"><button data-act="tod" data-t="auto" class="${todPref()==='auto'?'on':''}">Auto</button><button data-act="tod" data-t="dia" class="${todPref()==='dia'?'on':''}">☀️</button><button data-act="tod" data-t="noche" class="${todPref()==='noche'?'on':''}">🌙</button></div>`:''}
    <div class="seg"><button data-act="mode" data-m="lomos" class="${lib.mode==='lomos'?'on':''}">Lomos</button><button data-act="mode" data-m="portadas" class="${lib.mode==='portadas'?'on':''}">Portadas</button></div>
    <button class="btn dark" data-act="random">🎲 Elegime uno</button><button class="btn" data-act="new">+ Agregar libro</button></div>
   ${alpha()?`<div class="az"><span>Ir a la letra</span>${'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(L=>`<button data-act="jump" data-l="${L}" ${lettersHave.has(L)?'':'disabled'}>${L}</button>`).join('')}</div>`:''}
@@ -1245,40 +1248,43 @@ function topProps(){
 }
 function spineDims(b){const h=hash(b.title),m=innerWidth<=760,w=Math.max(30,Math.min(70,Math.round(24+(b.pages||200)/14+(h%7)))),hh=168+(hash(b.author||'a')%38)+((b.pages||200)>400?10:0);return m?{w:Math.max(24,Math.round(w*.74)),h:Math.round(hh*.8)}:{w,h:hh}}
 
-/* ===== Escena con imagen (Lila) ===== */
-const IMG_BASE=[309,486,661,841],IMG_PTS=[[255,9],[316,13],[542,13],[536,18],[324,19],[227,19],[250,10],[668,17],[890,17],[988,15],[994,10],[1218,14],[1283,13],[1210,21],[833,18],[736,21],[802,21],[564,23],[862,24],[957,23],[628,25],[701,26],[924,26],[1296,17],[1298,25],[393,33],[358,33],[502,35],[1025,35],[770,37],[1138,36],[1176,36],[1276,35],[466,42],[425,43],[1064,44],[1105,46],[776,41],[747,46],[789,47],[266,42],[1266,42],[768,8]];
-const IMG_CANDLES=[[73,627],[112,598],[151,627],[1383,627],[1424,598],[1464,627]];
-const imgOK=()=>theme()==='lila'&&innerWidth>760;
+/* ===== Escena con imagen (Lila y Clásica, escritorio) ===== */
+const IMG_CFG={
+ lila:{img:'img/lila.webp',base:[453,576,697,819],x:400,w:738,h:118,
+  chand:[[655,95],[680,66],[710,70],[740,58],[795,60],[825,68],[856,60],[880,82]],sconce:[[172,72],[1372,72],[95,512],[1415,512]],
+  fire:[55,785],moon:[1172,152],petals:true},
+ clasica:{img:'img/clasica.webp',base:[441,569,694,826],x:330,w:878,h:124,
+  chand:[[662,86],[690,62],[716,52],[740,48],[796,48],[826,52],[852,62],[878,86]],sconce:[[135,118],[1405,118],[80,412],[1452,412]],
+  fire:[1512,730],moon:[1090,142],petals:false}};
+const imgOK=()=>innerWidth>760;
 const imgMode=()=>imgOK();
-const todPref=()=>(S.settings&&S.settings.tod)||'auto';
-const todNow=()=>{const p=todPref();if(p!=='auto')return p;const h=new Date().getHours();return h>=7&&h<19?'dia':'noche'};
 function drawImgShelves(box){
-  const lom=lib.mode==='lomos',list=filteredBooks(),W=892,tod=todNow(),items=[];let last=null;
+  const C=IMG_CFG[theme()],lom=lib.mode==='lomos',list=filteredBooks(),W=C.w,items=[];let last=null;
+  const ch=C.h-8,cw=Math.round(ch*118/176);
   list.forEach(b=>{if(alpha()){const L=letterOf(b);if(L!==last){items.push({div:L,w:40});last=L}}
-    const d=spineDims(b);items.push(lom?{b,w:Math.max(22,Math.round(d.w*.78)),h:Math.min(140,Math.round(d.h*.66))}:{b,w:110,cw:94,ch:140})});
-  items.push({add:true,w:lom?38:110});
+    const d=spineDims(b);items.push(lom?{b,w:Math.max(20,Math.round(d.w*.68)),h:Math.min(C.h-8,Math.round(d.h*.58))}:{b,w:cw+16,cw,ch})});
+  items.push({add:true,w:lom?34:cw+16});
   const rows=[];let cur=[],used=0;
   items.forEach(it=>{const wd=it.w+2;if(used+wd>W&&cur.length){rows.push(cur);cur=[];used=0}cur.push(it);used+=wd});
-  if(cur.length)rows.push(cur);while(rows.length%4)rows.push([]);
-  const R=rng(7),fx=()=>{
-    let h='';
-    for(let i=0;i<16;i++)h+=`<i class="petal" style="left:${Math.round(260+R()*1000)}px;--d:${Math.round(11+R()*9)}s;--s:${Math.round(18+R()*34)}px;--h:1010px;animation-delay:-${Math.round(R()*18)}s"></i>`;
-    IMG_PTS.forEach(([x,y],i)=>{h+=`<i class="fl" style="left:${x}px;top:${y}px;animation-delay:-${(i*.37%2.6).toFixed(2)}s;animation-duration:${(1.8+(i%5)*.4).toFixed(1)}s"></i>`});
-    IMG_CANDLES.forEach(([x,y],i)=>{h+=`<i class="cfl" style="left:${x}px;top:${y}px;--d:${(1.1+(i%3)*.25).toFixed(2)}s;animation-delay:-${(i*.3).toFixed(1)}s"></i>`});
-    if(tod==='noche'){h+='<i class="mglow" style="left:1427px;top:316px"></i>';for(let i=0;i<10;i++){const left=i%2===0;h+=`<i class="ff" style="left:${Math.round((left?40:1340)+R()*130)}px;top:${Math.round(330+R()*360)}px;--d:${Math.round(6+R()*6)}s;--x:${Math.round(-20+R()*40)}px;animation-delay:-${Math.round(R()*9)}s"></i>`}}
-    else for(let i=0;i<14;i++){const left=i%2===0;h+=`<i class="mote" style="left:${Math.round((left?40:1345)+R()*130)}px;top:${Math.round(260+R()*420)}px;--d:${Math.round(7+R()*7)}s;--x:${Math.round(-18+R()*36)}px;animation-delay:-${Math.round(R()*12)}s"></i>`}
-    return h};
-  let out='';
-  for(let g=0;g<rows.length;g+=4){
-    out+=`<div class="lsc"><div class="lsi" style="background-image:url(img/lila-${tod==='noche'?'noche':'dia'}.webp)">`+
-    rows.slice(g,g+4).map((r,ri)=>`<div class="irow" style="top:${IMG_BASE[ri]-150}px">${r.map(it=>it.div?`<div class="divi" id="L-${it.div}" style="--dh:112px"><b>${it.div}</b></div>`
-      :it.add?(lom?`<div class="sp add" data-act="new" style="--w:36px;--h:112px" title="Agregar libro">+</div>`:`<div class="cv" data-act="new" style="--W:94px"><div class="cvadd" style="width:94px;height:140px;border-radius:4px">+</div></div>`):itemHtml(it)).join('')}</div>`).join('')+
-    `<div class="lsfx">${fx()}</div></div></div>`;
-  }
-  box.innerHTML=out;fitImg(box);
+  if(cur.length)rows.push(cur);
+  const pages=Math.max(1,Math.ceil(rows.length/4));if(lib.page>=pages)lib.page=pages-1;if(!(lib.page>0))lib.page=0;
+  lib._pg={};rows.forEach((r,ri)=>r.forEach(it=>{lib._pg[it.b?it.b.id:it.div?'L-'+it.div:'add']=Math.floor(ri/4)}));
+  const pr=rows.slice(lib.page*4,lib.page*4+4);while(pr.length<4)pr.push([]);
+  const R=rng(7),pt=(x,y,c,st='')=>`<i class="${c}" style="left:${x}px;top:${y}px;${st}"></i>`;
+  let fx='';
+  if(C.petals)for(let i=0;i<14;i++){const l=R()<.5?Math.round(30+R()*300):Math.round(1200+R()*300);fx+=`<i class="petal" style="left:${l}px;--d:${Math.round(11+R()*9)}s;--s:${Math.round(18+R()*34)}px;--h:1010px;animation-delay:-${Math.round(R()*18)}s"></i>`}
+  else for(let i=0;i<22;i++)fx+=`<i class="mote" style="left:${Math.round(40+R()*1450)}px;top:${Math.round(250+R()*600)}px;--d:${Math.round(7+R()*8)}s;--x:${Math.round(-18+R()*36)}px;animation-delay:-${Math.round(R()*12)}s"></i>`;
+  C.chand.forEach(([x,y],i)=>{fx+=pt(x,y,'cfl',`width:6px;height:14px;margin:-13px 0 0 -3px;--d:${(1.1+(i%3)*.3).toFixed(2)}s;animation-delay:-${(i*.27).toFixed(2)}s`)});
+  C.sconce.forEach(([x,y],i)=>{fx+=pt(x,y,'cfl',`width:7px;height:16px;margin:-14px 0 0 -3.5px;--d:${(1.2+(i%3)*.25).toFixed(2)}s;animation-delay:-${(i*.4).toFixed(1)}s`)});
+  fx+=pt(C.fire[0],C.fire[1],'fire')+pt(C.moon[0],C.moon[1],'mglow');
+  const rowsHtml=pr.map((r,ri)=>`<div class="irow" style="left:${C.x}px;width:${W}px;height:${C.h}px;top:${C.base[ri]-C.h+1}px">${r.map(it=>it.div?`<div class="divi" id="L-${it.div}" style="--dh:${C.h-14}px"><b>${it.div}</b></div>`
+    :it.add?(lom?`<div class="sp add" data-act="new" style="--w:32px;--h:${C.h-18}px" title="Agregar libro">+</div>`:`<div class="cv" data-act="new" style="--W:${cw}px"><div class="cvadd" style="width:${cw}px;height:${ch}px;border-radius:4px">+</div></div>`):itemHtml(it)).join('')}</div>`).join('');
+  const pager=pages>1?`<div class="pager"><button data-act="pg" data-d="-1" ${lib.page<=0?'disabled':''} title="Anterior">‹</button><span>${lib.page+1} / ${pages}</span><button data-act="pg" data-d="1" ${lib.page>=pages-1?'disabled':''} title="Siguiente">›</button></div>`:'';
+  box.innerHTML=`<div class="lsc"><div class="lsi" style="background-image:url(${C.img})">${rowsHtml}<div class="lsfx">${fx}</div></div>${pager}</div>`;fitImg(box);
   if(!list.length&&(lib.q||lib.filter!=='Todos'||lib.trope||lib.spice!==''))box.insertAdjacentHTML('afterbegin',`<div style="position:absolute;z-index:6;left:24px;top:24px;padding:10px 16px;border-radius:10px;background:rgba(40,16,60,.8);color:#f3e6f7;font-size:14px">No hay libros con esos filtros.</div>`);
 }
 function fitImg(box){const k=box.clientWidth/1536;box.querySelectorAll('.lsc').forEach(c=>{c.style.height=(1024*k)+'px';c.firstChild.style.transform=`scale(${k})`})}
+function libPage(id){if(lib._pg&&lib._pg[id]!=null&&lib._pg[id]!==lib.page&&$('#shelves.ishelves')){lib.page=lib._pg[id];drawShelves()}}
 function drawShelves(){
   const box=$('#shelves');if(!box)return;
   if(box.classList.contains('ishelves'))return drawImgShelves(box);
@@ -1584,10 +1590,10 @@ const A={
   toggleLang(){S.settings.lang=LANG==='es'?'en':'es';save();setLang(S.settings.lang);coverCache&&Object.keys(coverCache).forEach(k=>delete coverCache[k]);render()},
   toggleTheme(){S.settings.theme=theme()==='lila'?'clasica':'lila';save();render()},
   setTheme(el){S.settings.theme=el.dataset.t;save();render()},
-  filter(el){lib.filter=el.dataset.k;render()},mode(el){lib.mode=el.dataset.m;render()},tod(el){S.settings.tod=el.dataset.t;save();render()},
-  jump(el){const d=$('#L-'+el.dataset.l);if(d){d.scrollIntoView({block:'center',behavior:'smooth'});const nx=d.nextElementSibling;[d,nx].forEach(x=>{if(x){x.classList.remove('flash');void x.offsetWidth;x.classList.add('flash')}})}},
+  filter(el){lib.filter=el.dataset.k;lib.page=0;render()},mode(el){lib.mode=el.dataset.m;lib.page=0;render()},pg(el){lib.page=Math.max(0,(lib.page||0)+(+el.dataset.d));drawShelves()},
+  jump(el){libPage('L-'+el.dataset.l);const d=$('#L-'+el.dataset.l);if(d){d.scrollIntoView({block:'center',behavior:'smooth'});const nx=d.nextElementSibling;[d,nx].forEach(x=>{if(x){x.classList.remove('flash');void x.offsetWidth;x.classList.add('flash')}})}},
   random(){const pool=S.books.filter(b=>b.status==='Por leer');if(!pool.length){toast('No tenés libros en tu pila de "Por leer"');return}
-    const b=pool[Math.floor(Math.random()*pool.length)];lib.filter='Por leer';lib.q='';lib.trope='';lib.spice='';render();
+    const b=pool[Math.floor(Math.random()*pool.length)];lib.filter='Por leer';lib.q='';lib.trope='';lib.spice='';lib.page=0;render();libPage(b.id);
     const el=document.querySelector(`#shelves [data-id="${b.id}"]`);if(el){el.classList.add('picked');el.scrollIntoView({block:'center',behavior:'smooth'})}toast('📖 Hoy te toca: '+b.title)},
   /* modal */
   mtab(el){M.tab=el.dataset.t;document.querySelectorAll('.mtabs button').forEach(x=>x.classList.toggle('on',x===el));document.querySelectorAll('.msec').forEach(x=>x.classList.toggle('on',x.dataset.s===M.tab))},
@@ -1650,7 +1656,7 @@ const A={
 document.addEventListener('click',e=>{const el=e.target.closest('[data-act]');if(!el)return;if(el.tagName==='A'&&!el.target)e.preventDefault();const f=A[el.dataset.act];if(f)f(el,e)});
 document.addEventListener('mousedown',e=>{if(e.target.id==='ov')closeModal()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&M)closeModal()});
-document.addEventListener('input',e=>{if(e.target.id==='q'){lib.q=e.target.value;drawShelves()}});
+document.addEventListener('input',e=>{if(e.target.id==='q'){lib.q=e.target.value;lib.page=0;drawShelves()}});
 document.addEventListener('change',e=>{const t=e.target,d=t.dataset||{};
   if(t.id==='sort'){lib.sort=t.value;render()}
   else if(t.id==='ftrope'){lib.trope=t.value;render()}
