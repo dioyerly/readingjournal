@@ -6,10 +6,14 @@ DirectoryIndex index.html index.php
 </FilesMatch>
 <IfModule mod_rewrite.c>
   RewriteEngine On
+  # Hostinger a veces no pasa el header Authorization (lo usa el Centro de operaciones)
+  RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
   RewriteCond %{HTTPS} off
   RewriteCond %{HTTP_HOST} !^(localhost|127\.0\.0\.1)
   RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-  RewriteRule ^(lib|private|data)(/|$) - [F,L]
+  RewriteRule ^(lib|private|data|storage|tests)(/|$) - [F,L]
+  # La demo es la misma app en modo demo (sin cuenta, con ejemplos)
+  RewriteRule ^demo\.html$ app.html [L]
 </IfModule>
 <IfModule mod_headers.c>
   Header always set X-Content-Type-Options "nosniff"

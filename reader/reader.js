@@ -16,7 +16,7 @@ async function needPdf(){if(!window.pdfjsLib)await loadScript('vendor/pdf.min.js
 
 /* ---------- archivos: IndexedDB local + servidor ---------- */
 const FS={db:null,
-  open(){return new Promise(res=>{if(this.db)return res();try{const r=indexedDB.open('mi-biblioteca-files',1);r.onupgradeneeded=()=>r.result.createObjectStore('f');r.onsuccess=()=>{this.db=r.result;res()};r.onerror=()=>res()}catch(e){res()}})},
+  open(){return new Promise(res=>{if(this.db)return res();try{const r=indexedDB.open('bookwat-files'+(MB.demo?'-demo':''),1);r.onupgradeneeded=()=>r.result.createObjectStore('f');r.onsuccess=()=>{this.db=r.result;res()};r.onerror=()=>res()}catch(e){res()}})},
   async get(id){await this.open();return new Promise(res=>{if(!this.db)return res(null);const q=this.db.transaction('f').objectStore('f').get(id);q.onsuccess=()=>res(q.result||null);q.onerror=()=>res(null)})},
   async set(id,v){await this.open();return new Promise(res=>{if(!this.db)return res(false);const t=this.db.transaction('f','readwrite');t.objectStore('f').put(v,id);t.oncomplete=()=>res(true);t.onerror=()=>res(false)})},
   async del(id){await this.open();try{this.db&&this.db.transaction('f','readwrite').objectStore('f').delete(id)}catch(e){}}};

@@ -7,3 +7,7 @@ private/books/*
 data/*
 !data/.gitkeep
 .DS_Store
+
+storage/*
+!storage/.gitkeep
+!storage/.htaccess
