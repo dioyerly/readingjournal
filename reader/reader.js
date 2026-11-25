@@ -125,24 +125,16 @@ async function attachFile(file,forId){
 }
 
 /* Libro de ejemplo (solo demo): El conde de Montecristo, dominio público */
+async function exampleFile(){
+  let blob;
+  if(window.__BWEX){const bin=atob(window.__BWEX),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);blob=new Blob([u],{type:'application/epub+zip'})}
+  else{const r=await fetch(BASE+'demo-libro/montecristo.epub');if(!r.ok)throw 0;blob=await r.blob()}
+  return new File([blob],'montecristo.epub',{type:'application/epub+zip'});
+}
 async function openExample(){
   let b=MB.S.books.find(x=>x.dig&&x.dig.example);
-  if(b){read(b.id);return}
-  const dlg=document.createElement('div');dlg.className='rd-dlg notr';dlg.innerHTML=`<div><h3>${L('Preparando el libro…','Getting the book ready…')}</h3></div>`;document.body.appendChild(dlg);
-  try{
-    let blob;
-    if(window.__BWEX){const bin=atob(window.__BWEX),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);blob=new Blob([u],{type:'application/epub+zip'})}
-    else{const r=await fetch(BASE+'demo-libro/montecristo.epub');if(!r.ok)throw 0;blob=await r.blob()}
-    const file=new File([blob],'montecristo.epub',{type:'application/epub+zip'});
-    const E=await epubOpen(file);
-    const pages=Math.max(1,Math.round(E.spine.reduce((a,s)=>a+s.w,0)/2300));
-    b=MB.newBook({title:'El conde de Montecristo',author:'Alejandro Dumas',format:'Ebook',pages,status:'Por leer',genre:(MB.S.settings.genres||[])[0]||'Aventura'});
-    MB.S.books.push(b);
-    b.dig={kind:'epub',name:'montecristo.epub',size:file.size,pos:null,max:0,last:0,hl:[],example:true};b.secs=0;
-    if(E.cover){try{const r=await MB.processImage(E.cover);MB.covers[b.id]=r.data;MB.IDB.set(b.id,r.data);b.color=r.color}catch(e){}}
-    await FS.set(b.id,{blob:file,kind:'epub',name:file.name});
-    MB.save();dlg.remove();MB.render();read(b.id);
-  }catch(e){dlg.remove();MB.toast(L('No pude cargar el libro de ejemplo','Could not load the example book'))}
+  if(!b)return;
+  read(b.id);
 }
 
 /* ======================================================================
@@ -155,6 +147,7 @@ async function read(id){
   const b=MB.S.books.find(x=>x.id===id);if(!b||!b.dig){MB.toast(L('Este libro todavía no tiene archivo digital','This book has no digital file yet'));return}
   if(R.open)close(true);
   let rec=await FS.get(id);
+  if(!rec&&b.dig.example){try{const f=await exampleFile();rec={blob:f,kind:'epub',name:f.name};await FS.set(id,rec)}catch(e){}}
   if(!rec){
     MB.toast(L('Buscando tu libro en la nube…','Fetching your book from the cloud…'));
     const blob=await srvDown(id);
@@ -773,11 +766,12 @@ function view(){
       <div class="bar"><i style="width:${p}%"></i></div><small>${p}% · ⏱ ${fmtT(b.secs||0)} · ✦ ${d.hl.length}</small>
       <div class="acts"><button class="mini" data-act="rdRead" data-id="${b.id}">${p>0&&p<98?L('▶ Continuar','▶ Continue'):b.status==='Terminado'?L('↻ Releer','↻ Reread'):L('📖 Leer','📖 Read')}</button>
       <button class="mini o" data-act="open" data-id="${b.id}">${L('Ficha','Details')}</button><button class="mini o" data-act="rdDetach" data-id="${b.id}" title="${L('Quitar el archivo (conserva el libro y tus citas)','Remove the file (keeps the book and your quotes)')}">🗑</button></div></div></div>`};
+  const BOOKS=books.length?`<h3 class="mt" style="font:600 26px var(--serif);color:var(--h1)">${L('Tus libros digitales','Your digital books')}</h3><div class="rdv-grid mt">${books.map(card).join('')}</div>`:'';
   return `<div class="notr" id="rdHost"><h1 class="pt">${L('Mi <em>lector</em>','My <em>reader</em>')}</h1><p class="sub">${L('Leé tus EPUB y PDF acá: se anota solo tu tiempo, tu progreso y tus frases favoritas.','Read your EPUB and PDF files here: your time, progress and favorite quotes are tracked for you.')}</p>
-   ${MB.demo&&!books.some(x=>x.dig.example)?`<div class="mt rdv-drop" data-act="rdExample" style="border-style:solid"><span class="rd-big">📚</span><h3>${L('Probá el lector con un libro de ejemplo','Try the reader with a sample book')}</h3><p>${L('“El conde de Montecristo”, de Alejandro Dumas (dominio público). Tocá para abrirlo y ver cómo se lee, se subraya y se guarda tu progreso.','“The Count of Monte Cristo” by Alexandre Dumas (public domain). Tap to open it and see how reading, highlighting and progress work.')}</p></div>`:''}
+   ${MB.demo?BOOKS:''}
    <div class="grid g3 mt"><div class="card rdv-stat"><div class="rdv-n">${fmtT(today)}</div><div class="rdv-l">${L('Hoy','Today')}</div></div><div class="card rdv-stat"><div class="rdv-n">${fmtT(weekSecs())}</div><div class="rdv-l">${L('Últimos 7 días','Last 7 days')}</div></div><div class="card rdv-stat"><div class="rdv-n">${fmtT(total)}</div><div class="rdv-l">${L('Tiempo total','Total time')}</div></div></div>
    <div class="mt rdv-drop" id="rdDrop" data-act="rdPick"><span class="rd-big">📖</span><h3>${L('Subí un libro para leerlo acá','Upload a book to read it here')}</h3><p>${L('EPUB o PDF · se guarda en este dispositivo y, si tenés cuenta, también en tu nube','EPUB or PDF · saved on this device and, if you have an account, in your cloud')}</p><button class="btn" data-act="rdPick">${L('＋ Elegir archivo','＋ Choose file')}</button></div>
-   ${books.length?`<h3 class="mt" style="font:600 26px var(--serif);color:var(--h1)">${L('Tus libros digitales','Your digital books')}</h3><div class="rdv-grid mt">${books.map(card).join('')}</div>`:''}
+   ${MB.demo?'':BOOKS}
    <p class="rdv-note">${L('Funciona con EPUB y PDF sin protección (DRM). Los libros de Kindle no se pueden abrir. Pensado para celular y tablet.','Works with EPUB and PDF files without DRM. Kindle books can\'t be opened. Made for phone and tablet.')}</p></div>`;
 }
 function wire(){
