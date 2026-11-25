@@ -46,10 +46,12 @@ function token_centro_ok(string $dado): bool {
   if ($dado === '' || strlen($dado) < 32) return false;
   $cfgTok = (string)cfg('EXPORT_TOKEN');
   if ($cfgTok !== '' && strlen($cfgTok) >= 32 && hash_equals($cfgTok, $dado)) return true;
+  $eco = (string)cfg('ECOSYSTEM_KEY'); /* clave compartida del Centro de operaciones (una sola para todas las apps) */
+  if ($eco !== '' && strlen($eco) >= 32 && hash_equals($eco, $dado)) return true;
   $h = ajuste('centro_token_hash');
   return $h !== null && hash_equals($h, hash('sha256', $dado));
 }
-function token_centro_configurado(): bool { return strlen((string)cfg('EXPORT_TOKEN')) >= 32 || ajuste('centro_token_hash') !== null; }
+function token_centro_configurado(): bool { return strlen((string)cfg('EXPORT_TOKEN')) >= 32 || strlen((string)cfg('ECOSYSTEM_KEY')) >= 32 || ajuste('centro_token_hash') !== null; }
 
 function cabeceras_seguras(): void {
   header('X-Content-Type-Options: nosniff');

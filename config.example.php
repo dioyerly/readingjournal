@@ -35,6 +35,7 @@ return [
   // --- Centro de operaciones ---
   // No hace falta completarlo: el token se genera desde admin.php → "Conectar con el Centro".
   'EXPORT_TOKEN'  => '',
+  'ECOSYSTEM_KEY' => '', // clave compartida con el Centro de operaciones (32+ caracteres; la misma en todas las apps)
   'EXPORT_ORIGIN' => '',
 
   // --- Mails ---
