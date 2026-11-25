@@ -17,6 +17,15 @@ if ($permitido !== '' && $origen === $permitido) { header('Access-Control-Allow-
 if (($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS') { http_response_code(204); exit; }
 function f(int $c, array $d): void { http_response_code($c); echo json_encode($d, JSON_UNESCAPED_UNICODE); exit; }
 $pdo = db();
+/* Conexión por código: el Centro manda el código de 8 dígitos (de un solo uso, 10 min) y una clave nueva. */
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
+  $inP = json_decode((string)file_get_contents('php://input', false, null, 0, 1025), true);
+  if (is_array($inP) && ($inP['accion'] ?? '') === 'emparejar') {
+    if (freno_bloqueado('emparejar', '', 5, 15)) f(429, ['error' => 'Demasiados intentos']);
+    if (!centro_emparejar(preg_replace('/\D+/', '', (string)($inP['codigo'] ?? '')), (string)($inP['clave'] ?? ''))) { freno_falla('emparejar', ''); f(401, ['error' => 'Código incorrecto o vencido']); }
+    auditar('centro', 'centro_emparejado', 'conexión por código'); f(200, ['ok' => true]);
+  }
+}
 if (!token_centro_configurado()) f(503, ['error' => 'Exportación no configurada']);
 if (freno_bloqueado('export', '', 20, 15)) f(429, ['error' => 'Demasiados intentos']);
 $h = (string)($_SERVER['HTTP_AUTHORIZATION'] ?? $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ?? '');

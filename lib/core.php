@@ -51,6 +51,21 @@ function token_centro_ok(string $dado): bool {
   $h = ajuste('centro_token_hash');
   return $h !== null && hash_equals($h, hash('sha256', $dado));
 }
+/* ---- Conexión por código con el Centro de operaciones (sin copiar claves a mano) ---- */
+function centro_codigo_generar(): string {
+  $c = (string)random_int(10000000, 99999999);
+  ajuste_set('centro_codigo', hash('sha256', $c) . '|' . (time() + 600));
+  return $c;
+}
+function centro_emparejar(string $codigo, string $clave): bool {
+  $v = (string)ajuste('centro_codigo'); if ($v === '' || strpos($v, '|') === false) return false;
+  [$h, $exp] = explode('|', $v, 2);
+  if ((int)$exp < time() || !hash_equals($h, hash('sha256', $codigo))) return false;
+  if (strlen($clave) < 32 || strlen($clave) > 200 || !preg_match('/^[A-Za-z0-9_-]+$/', $clave)) return false;
+  ajuste_set('centro_token_hash', hash('sha256', $clave));
+  ajuste_set('centro_codigo', ''); /* el código sirve una sola vez */
+  return true;
+}
 function token_centro_configurado(): bool { return strlen((string)cfg('EXPORT_TOKEN')) >= 32 || strlen((string)cfg('ECOSYSTEM_KEY')) >= 32 || ajuste('centro_token_hash') !== null; }
 
 function cabeceras_seguras(): void {

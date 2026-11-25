@@ -106,6 +106,9 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
       $em = q1($pdo, 'SELECT email FROM cuentas WHERE id = ?', [$cid]);
       if ($em) { $tok = crear_token_recuperacion($pdo, $cid, 60); auditar($adminEmail, 'admin_link_clave', "cuenta $cid");
         flash('o', 'Link de un solo uso (1 hora) para ' . esc((string)$em) . ':<br><code style="word-break:break-all">' . esc(rtrim((string)cfg('APP_URL'), '/') . '/recuperar.php?t=' . $tok) . '</code>'); }
+    } elseif ($a === 'centro_codigo') {
+      $cod = centro_codigo_generar(); auditar($adminEmail, 'admin_codigo_centro', 'código de conexión generado');
+      flash('o', '<b>Código de conexión:</b> <code style="font-size:26px;letter-spacing:4px">' . esc(substr($cod, 0, 4) . ' ' . substr($cod, 4)) . '</code><br>Escribilo en tu Centro de operaciones (panel.estrategia.site) → Inicio → <b>Conectar</b>. Sirve una sola vez y vence en 10 minutos.');
     } elseif ($a === 'centro_token') {
       $tok = bin2hex(random_bytes(24));
       ajuste_set('centro_token_hash', hash('sha256', $tok)); auditar($adminEmail, 'admin_token_centro', 'token nuevo generado');
@@ -327,6 +330,7 @@ details.card>summary{cursor:pointer;font-weight:700;list-style:none}details.card
   <div class="card"><h3>Centro de operaciones</h3>
     <p class="mut">Conectá Bookwat a tu Centro (panel.estrategia.site) para ver clientas, pagos, visitas de la landing y suspender o activar cuentas desde ahí.</p>
     <p>Estado: <?= token_centro_configurado() ? '<span class="pill ok">token generado</span>' : '<span class="pill warn">sin conectar</span>' ?></p>
+    <form method="post" action="admin.php"><?= csrf_in('centro_codigo', 'sistema') ?><button>Generar código de conexión</button></form><p class="mut" style="margin:10px 0 4px">Opción manual (token largo):</p>
     <form method="post" action="admin.php" onsubmit="return <?= token_centro_configurado() ? "confirm('Se genera un token nuevo y el anterior deja de funcionar. ¿Seguimos?')" : 'true' ?>"><?= csrf_in('centro_token', 'sistema') ?><button><?= token_centro_configurado() ? 'Generar token nuevo' : 'Conectar con el Centro (generar token)' ?></button></form>
   </div>
   <div class="card"><h3>Diagnóstico</h3><table style="min-width:0">
