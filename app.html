@@ -1215,7 +1215,7 @@ function sortKey(b){return lib.sort==='autor'?norm(surname(b.author)+' '+b.autho
 const letterOf=b=>{const c=sortKey(b).trim().charAt(0).toUpperCase();return /[A-Z]/.test(c)?c:'#'};
 function filteredBooks(){
   let l=S.books.slice();const q=norm(lib.q.trim().toLowerCase());
-  if(q)l=l.filter(b=>norm((b.title+' '+TX(b.title)+' '+b.author+' '+b.genre+' '+(b.series||'')+' '+(b.tropes||[]).join(' ')+' '+(b.tropes||[]).map(tx).join(' ')+' '+(b.boyfriend||'')).toLowerCase()).includes(q));
+  if(q)l=l.filter(b=>norm((b.title+' '+TX(b.title)+' '+b.author+' '+b.genre+' '+(b.series||'')+' '+(b.tropes||[]).join(' ')+' '+(b.tropes||[]).map(TX).join(' ')+' '+(b.boyfriend||'')).toLowerCase()).includes(q));
   const f=lib.filter;if(f==='Favoritos')l=l.filter(b=>b.fav);else if(f!=='Todos')l=l.filter(b=>b.status===f);
   if(lib.trope)l=l.filter(b=>has(b,lib.trope));
   if(lib.spice!=='')l=l.filter(b=>lib.spice==='0'?(b.spice||0)===0:(b.spice||0)>=+lib.spice);
