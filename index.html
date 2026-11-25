@@ -290,6 +290,14 @@ footer nav{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-bo
 .demoframe[data-d=d]{width:min(100%,1180px);height:min(720px,82vh);border-radius:14px}
 @media(max-width:520px){.demoframe[data-d=m]{width:100%;height:78vh;border-radius:26px;border-width:6px}}
 </style>
+<style>
+/* botón flotante: más apps de EstrategIA */
+#moreapps{position:fixed;left:clamp(12px,2vw,26px);bottom:clamp(12px,2vw,26px);z-index:60;display:flex;align-items:center;gap:0;text-decoration:none;color:#fff8fd;font:600 13px/1.2 var(--sans);background:rgba(26,14,43,.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(201,167,236,.35);border-radius:99px;padding:5px 16px 5px 5px;box-shadow:0 10px 30px -8px rgba(0,0,0,.6);transition:transform .25s,box-shadow .25s}
+#moreapps:hover{transform:translateY(-3px);box-shadow:0 14px 34px -8px rgba(242,167,201,.45)}
+#moreapps img{width:42px;height:42px;border-radius:50%;object-fit:cover;margin-right:10px;box-shadow:0 0 0 2px rgba(242,167,201,.6)}
+#moreapps small{display:block;font:500 11px var(--sans);color:#c9a7ec;letter-spacing:.02em}
+@media(max-width:560px){#moreapps{font-size:12px;padding:4px 12px 4px 4px}#moreapps img{width:36px;height:36px;margin-right:8px}}
+</style>
 </head>
 <body>
 <div id="sky"></div><canvas id="fx"></canvas>
@@ -640,5 +648,6 @@ setLang(LANG);onScroll();
 })();
 </script>
 <script src="track.js" defer></script>
+<a id="moreapps" href="https://descargar.estrategia.site" target="_blank" rel="noopener"><img src="img/estrategia-logo.webp" alt="EstrategIA" width="42" height="42"><span><span lang="es">¿Querés ver más apps?</span><span lang="en">Want to see more apps?</span><small><span lang="es">Mirá todo en EstrategIA →</span><span lang="en">See everything at EstrategIA →</span></small></span></a>
 </body>
 </html>
